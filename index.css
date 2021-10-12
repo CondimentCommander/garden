@@ -1,0 +1,87 @@
+#overlay {
+	z-index: 5;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	pointer-events: none;
+}
+
+#plott {
+	border-spacing: 1px;
+}
+.tile_b {
+	cursor: pointer;
+	margin: 0px;
+	padding: 15px;
+	background-color: black;
+	box-sizing: border-box;
+}
+#farmview {
+	width: 512px;
+	height: 512px;
+	display: block;
+	border-style: solid;
+}
+#menu {
+	width: calc(100% - 512px);
+	height: 100%;
+	border-style: solid;
+	border-left-style: none;
+	position: absolute;
+	left: 512px;
+	top: 0px;
+	bottom: 0px;
+}
+#seeds {
+	height: calc(100vh - 512px);
+	width: 512px;
+	border-style: solid;
+	border-top-style: none;
+	margin-top: 0px;
+	display: block;
+}
+@media screen and (max-width: 750px) {
+	#farmview {
+		width: 100%;
+		height: 100vw;
+		display: inline-block;
+		border-style: solid;
+	}
+	#menu {
+		width: 100%;
+		height: calc(100vh - 100vw);
+		border-style: solid;
+		border-top-style: none;
+		float: none;
+		position: static;
+		margin-top: -4px;
+	}
+	#seeds {
+		height: 150px;
+		width: 100%;
+		border-style: solid;
+		border-top-style: none;
+		margin-top: -4px;
+	}
+	#can {
+		width: calc(40vw - 16px);
+		height: calc(40vw - 16px);
+		position: absolute;
+		margin: 0px;
+	}
+}
+.section {
+	border-width: 8px;
+	margin: 0px;
+	padding: 0px;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+body {
+	margin: 0px;
+	height: 100vh;
+}
+.canvas {
+	image-rendering: pixelated;
+	overflow: hidden;
+}
