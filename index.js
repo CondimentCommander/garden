@@ -4,12 +4,21 @@ var rh = 1.0;
 var Game = {
 	clickTile: (ev) => {
 		//console.log(ev.srcElement.cellIndex, ev.srcElement.parentElement.rowIndex);
+		let sprite = Graphics.elems[Plot[ev.srcElement.parentElement.rowIndex][ev.srcElement.cellIndex].sprite];
+		//sprite
 	},
 	panStart: (ev) => {
 		console.log(ev);
 	},
 	panStop: (ev) => {
 		console.log(ev);
+	},
+	Plant: class {
+		constructor(name, id, displayName) {
+			this.name = name;
+			this.id = id;
+			this.dn = displayName;
+		}
 	}
 };
 var Plot = {
@@ -24,17 +33,29 @@ var Plot = {
 			for (let j = 0; j < Plot.width; j++) {
 				let cell = row.insertCell(j);
 				cell.classList.add('tile_b');
-				cell.pos = [j, i];
 				cell.onclick = Game.clickTile;
-				Plot.tiles[i].push('tile') //new tile
+				Plot.tiles[i].push(new Plot.Tile(j, i, 0)) //new tile
 			}
 		}
 	},
 	Tile: class {
-		constructor(x, y) {
+		constructor(x, y, soil) {
 			this.x = x;
 			this.y = y;
+			this.soil = soil;
+			this.plant = null;
+		}
+	},
+	PlantTile: class {
+		constructor() {
 			
+		}
+	},
+	render: () => {
+		for (let i = 0; i < Plot.height; i++) {
+			for (let j = 0; j < Plot.width; j++) {
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * 16, i * 16, { img: 'images/grassbad.png', s: 16, opacity: 1.0, viewLayer: 3 }).add();
+			}
 		}
 	}
 };

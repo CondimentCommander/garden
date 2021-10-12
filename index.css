@@ -7,14 +7,20 @@
 }
 
 #plott {
-	border-spacing: 1px;
+	border-spacing: 0px;
+}
+#plot {
+	position: fixed;
+	top: 8px;
+	z-index: 3;
 }
 .tile_b {
 	cursor: pointer;
 	margin: 0px;
-	padding: 15px;
+	padding: 8px;
 	background-color: black;
 	box-sizing: border-box;
+	opacity: 0.1;
 }
 #farmview {
 	width: 512px;
@@ -39,6 +45,11 @@
 	border-top-style: none;
 	margin-top: 0px;
 	display: block;
+}
+#can {
+	position: absolute;
+	width: calc(512 - 16px);
+	height: calc(512 - 16px);
 }
 @media screen and (max-width: 750px) {
 	#farmview {
