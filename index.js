@@ -4,14 +4,34 @@ var rh = 1.0;
 var Game = {
 	clickTile: (ev) => {
 		//console.log(ev.srcElement.cellIndex, ev.srcElement.parentElement.rowIndex);
-		let sprite = Graphics.elems[Plot[ev.srcElement.parentElement.rowIndex][ev.srcElement.cellIndex].sprite];
-		//sprite
+		let tile = Plot.tiles[ev.srcElement.parentElement.rowIndex][ev.srcElement.cellIndex]
+		let id = tile.sprite;
+		let sprite = Graphics.elems[id];
+		if (sprite.img == 'images/grassbad.png') Graphics.elems[id].replace(new Graphics.AnimatedSpriteElement(tile.x * 16, tile.y * 16, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 3 }));
+		if (sprite.img == 'images/animtest.png') Graphics.elems[id].replace(new Graphics.SpriteElement(tile.x * 16, tile.y * 16, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 3 }));
 	},
-	panStart: (ev) => {
-		console.log(ev);
+	mouseDown: false,
+	panStartX: 0,
+	panStartY: 0,
+	plotX: 0,
+	plotY: 0,
+	panStart: (event) => {
+		Game.mouseDown = true;
+		Game.panStartX = event.offsetX;
+		Game.panStartY = event.offsetY;
+		Game.plotX = Plot.plott.getBoundingClientRect().left;
+		Game.plotY = Plot.plott.getBoundingClientRect().top;
 	},
-	panStop: (ev) => {
-		console.log(ev);
+	panStop: (event) => {
+		Game.mouseDown = false;
+	},
+	panMove: (event) => {
+		if (Game.mouseDown) {
+			let moveX = event.offsetX - Game.panStartX;
+			let moveY = event.offsetY - Game.panStartY;
+			let rect = Plot.plott.getBoundingClientRect();
+			rect.left = Game.plotX 
+		}
 	},
 	Plant: class {
 		constructor(name, id, displayName) {
@@ -100,6 +120,12 @@ var Graphics = {
 		prop() { //updates the current value of the element in the element list to be in the layer
 			Graphics.elemLayers[this.lr][this.id] = this;
 		}
+		replace(rp) {
+			rp.id = this.id;
+			Graphics.elemLayers[this.lr][this.id] = rp;
+			//Graphics.elemLayers[this.lr][this.id].id = this.id;
+			Graphics.elems[this.id] = rp;
+		}
 	},
 	defineElements: () => {
 		Graphics.SpriteElement = class extends Graphics.ScreenElement {
@@ -160,8 +186,8 @@ var Graphics = {
 		for (let i = 0; i < 11; i++) {
 			Graphics.elemLayers.push({});
 		}
-		Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
-		Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
+		//Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
+		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
 		Graphics.interval = setInterval(Graphics.update, 1000 / 30);
 	},
 	update: () => {
