@@ -8,6 +8,7 @@
 
 #plott {
 	border-spacing: 0px;
+	position: fixed;
 }
 #plot {
 	position: fixed;
@@ -48,8 +49,8 @@
 }
 #can {
 	position: absolute;
-	width: calc(512 - 16px);
-	height: calc(512 - 16px);
+	width: calc(512px - 16px);
+	height: calc(512px - 16px);
 }
 @media screen and (max-width: 750px) {
 	#farmview {

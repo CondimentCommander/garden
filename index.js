@@ -19,8 +19,8 @@ var Game = {
 		Game.mouseDown = true;
 		Game.panStartX = event.offsetX;
 		Game.panStartY = event.offsetY;
-		Game.plotX = Plot.plott.getBoundingClientRect().left;
-		Game.plotY = Plot.plott.getBoundingClientRect().top;
+		Game.plotX = Plot.tb.getBoundingClientRect().left;
+		Game.plotY = Plot.tb.getBoundingClientRect().top;
 	},
 	panStop: (event) => {
 		Game.mouseDown = false;
@@ -29,8 +29,17 @@ var Game = {
 		if (Game.mouseDown) {
 			let moveX = event.offsetX - Game.panStartX;
 			let moveY = event.offsetY - Game.panStartY;
-			let rect = Plot.plott.getBoundingClientRect();
-			rect.left = Game.plotX 
+			let calcX = Game.plotX + moveX;
+			let calcY = Game.plotY + moveY;
+			let ts = Graphics.screenInfo().ts;
+			let ss = Graphics.screenInfo().ss;
+			calcX = Math.round(calcX / ts - 0.5) * ts + 8;
+			calcY = Math.round(calcY / ts - 0.5) * ts + 8;
+			Plot.pos = { x: calcX - 8, y: calcY - 8 };
+			if (calcX < 8 || calcX > ss - Plot.width * ts) calcX = ss - Plot.width * ts;
+			if (calcY < 8 || calcY > ss - Plot.height * ts) calcY = ss - Plot.height * ts;
+			Graphics.setPos(Plot.tb, calcX, calcY);
+			Plot.move();
 		}
 	},
 	Plant: class {
@@ -46,6 +55,7 @@ var Plot = {
 	width: 3,
 	height: 3,
 	pos: { x: 0, y: 0 },
+	zoom: 32,
 	generate: () => {
 		for (let i = 0; i < Plot.height; i++) {
 			let row = Plot.tb.insertRow(i);
@@ -72,9 +82,21 @@ var Plot = {
 		}
 	},
 	render: () => {
+		let ps = Graphics.screenInfo.ps;
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * 16, i * 16, { img: 'images/grassbad.png', s: 16, opacity: 1.0, viewLayer: 3 }).add();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/grassbad.png', s: 16, opacity: 1.0, viewLayer: 3 }).add();
+			}
+		}
+	},
+	move: () => {
+		let ps = Graphics.screenInfo.ps;
+		for (let i = 0; i < Plot.height; i++) {
+			for (let j = 0; j < Plot.width; j++) {
+				let sprite = Graphics.elems[Plot.tiles[i][j].sprite];
+				sprite.pos.x = j * ps + Plot.pos.x;
+				sprite.pos.y = i * ps + Plot.pos.y;
+				sprite.prop();
 			}
 		}
 	}
@@ -166,8 +188,19 @@ var Graphics = {
 			}
 		}
 	},
+	setPos: (elem, x, y) => {
+		let rect = elem.getBoundingClientRect();
+		elem.style.left = x + 'px';
+		elem.style.top = y + 'px';
+	},
+	screenInfo: () => {
+		let pixelsize = Plot.zoom / 2;
+		let screensize = Plot.farm.clientWidth;
+		let tilesize = screensize / Plot.zoom;
+		return {ts: tilesize, ps: pixelsize, ss: screensize};
+	},
 	refresh: () => {
-		Graphics.ctx.clearRect(0, 0, 1280, 720);
+		Graphics.ctx.clearRect(0, 0, 512, 512);
 		Graphics.ov.clearRect(0, 0, 1280, 720);
 	},
 	elems: {},
@@ -212,6 +245,8 @@ function start() {
 	Graphics.ctx = Graphics.canvas.getContext('2d');
 	Plot.generate();
 	Graphics.initial();
+	Plot.render();
 	console.log('Loaded!');
 }
 
+//plot moving would add new sprites each frames, iterate through instead and change sprite positions;      just doesnt render plot lmao
