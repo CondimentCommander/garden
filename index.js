@@ -7,8 +7,8 @@ var Game = {
 		let tile = Plot.tiles[ev.srcElement.parentElement.rowIndex][ev.srcElement.cellIndex]
 		let id = tile.sprite;
 		let sprite = Graphics.elems[id];
-		if (sprite.img == 'images/grassbad.png') Graphics.elems[id].replace(new Graphics.AnimatedSpriteElement(tile.x * 16, tile.y * 16, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 3 }));
-		if (sprite.img == 'images/animtest.png') Graphics.elems[id].replace(new Graphics.SpriteElement(tile.x * 16, tile.y * 16, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 3 }));
+		if (sprite.img == 'images/grassbad.png') Graphics.elems[id].replace(new Graphics.AnimatedSpriteElement(tile.x, tile.y, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 3 }));
+		if (sprite.img == 'images/animtest.png') Graphics.elems[id].replace(new Graphics.SpriteElement(tile.x, tile.y, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 3 }));
 	},
 	mouseDown: false,
 	panStartX: 0,
@@ -33,11 +33,13 @@ var Game = {
 			let calcY = Game.plotY + moveY;
 			let ts = Graphics.screenInfo().ts;
 			let ss = Graphics.screenInfo().ss;
+			if (calcX < 8) calcX = 8;
+			if (calcX > ss - Plot.width * ts) calcX = ss - Plot.width * ts + 8;
+			if (calcY < 8) calcY = 8;
+			if (calcY > ss - Plot.height * ts) calcY = ss - Plot.height * ts + 8;
+			Plot.pos = { x: Math.round(calcX / ts - 0.5) * 16, y: Math.round(calcY / ts - 0.5) * 16};
 			calcX = Math.round(calcX / ts - 0.5) * ts + 8;
 			calcY = Math.round(calcY / ts - 0.5) * ts + 8;
-			Plot.pos = { x: calcX - 8, y: calcY - 8 };
-			if (calcX < 8 || calcX > ss - Plot.width * ts) calcX = ss - Plot.width * ts;
-			if (calcY < 8 || calcY > ss - Plot.height * ts) calcY = ss - Plot.height * ts;
 			Graphics.setPos(Plot.tb, calcX, calcY);
 			Plot.move();
 		}
@@ -72,6 +74,8 @@ var Plot = {
 		constructor(x, y, soil) {
 			this.x = x;
 			this.y = y;
+			this.plotx = x;
+			this.ploty = y;
 			this.soil = soil;
 			this.plant = null;
 		}
@@ -82,7 +86,7 @@ var Plot = {
 		}
 	},
 	render: () => {
-		let ps = Graphics.screenInfo.ps;
+		let ps = Graphics.screenInfo().ps;
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
 				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/grassbad.png', s: 16, opacity: 1.0, viewLayer: 3 }).add();
@@ -90,13 +94,23 @@ var Plot = {
 		}
 	},
 	move: () => {
-		let ps = Graphics.screenInfo.ps;
+		let ps = Graphics.screenInfo().ps;
+		for (let i = 0; i < Plot.height; i++) {
+			for (let j = 0; j < Plot.width; j++) {
+				let tile = Plot.tiles[i][j];
+				let sprite = Graphics.elems[tile.sprite];
+				sprite.pos.x = j * ps + Plot.pos.x;
+				sprite.pos.y = i * ps + Plot.pos.y;
+				tile.x = sprite.pos.x;
+				tile.y = sprite.pos.y;
+				sprite.prop();
+			}
+		}
+	},
+	renderUpdate: () => {
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
 				let sprite = Graphics.elems[Plot.tiles[i][j].sprite];
-				sprite.pos.x = j * ps + Plot.pos.x;
-				sprite.pos.y = i * ps + Plot.pos.y;
-				sprite.prop();
 			}
 		}
 	}
@@ -206,10 +220,10 @@ var Graphics = {
 	elems: {},
 	elemLayers: [],
 	testPattern: () => {
-		for (let i = 0; i < 200; i++) {
-			for (let j = 0; j < 200; j++) {
-				if (i % 2 == 0 && j % 2 == 0) {
-					Graphics.ctx.fillRect(i, j, 1, 1);
+		for (let i = 0; i < 512; i+=16) {
+			for (let j = 0; j < 512; j+=16) {
+				if (i % 32 == 0 && j % 32 == 0) {
+					Graphics.ctx.fillRect(i, j, 16, 16);
 				}
 			}
 		}
@@ -249,4 +263,4 @@ function start() {
 	console.log('Loaded!');
 }
 
-//plot moving would add new sprites each frames, iterate through instead and change sprite positions;      just doesnt render plot lmao
+// time for plot mechanics babyyyy
