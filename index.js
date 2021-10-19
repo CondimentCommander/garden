@@ -49,7 +49,22 @@ var Game = {
 			this.name = name;
 			this.id = id;
 			this.dn = displayName;
+			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}};
+			this.inh = {};
 		}
+		setinh() {
+			this.inh.events = this.events;
+			return this;
+		}
+		addEvent(name, fun) {
+			this.events[name] = fun;
+			return this;
+		}
+	},
+	init: () => {
+		Game.plants = [
+			new Game.Plant('test', 0, 'Test').addEvent('pretick', () => {console.log('hi')}).setinh()
+		];
 	}
 };
 var Plot = {
@@ -66,7 +81,8 @@ var Plot = {
 				let cell = row.insertCell(j);
 				cell.classList.add('tile_b');
 				cell.onclick = Game.clickTile;
-				Plot.tiles[i].push(new Plot.Tile(j, i, 0)) //new tile
+				Plot.tiles[i].push(new Plot.Tile(j, i, 0));
+				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[0]);
 			}
 		}
 	},
@@ -81,9 +97,20 @@ var Plot = {
 		}
 	},
 	PlantTile: class {
-		constructor() {
-			
+		constructor(plant) {
+			this.plant = plant;
+			this.inh = plant.inh;
 		}
+	},
+	execute: (func) => {
+		for (let i = 0; i < Plot.height; i++) {
+			for (let j = 0; j < Plot.width; j++) {
+				func(Plot.tiles[i][j], i, j);
+			}
+		}
+	},
+	tick: () => {
+		Plot.execute((tile, i, j) => {tile.plant.inh.events.pretick()});
 	},
 	render: () => {
 		let ps = Graphics.screenInfo().ps;
@@ -257,10 +284,13 @@ function start() {
 	Graphics.ov = Graphics.overlay.getContext('2d');
 	Graphics.canvas = document.getElementById('can');
 	Graphics.ctx = Graphics.canvas.getContext('2d');
-	Plot.generate();
+	Game.init();
 	Graphics.initial();
+	Plot.generate();
 	Plot.render();
 	console.log('Loaded!');
 }
 
-// time for plot mechanics babyyyy
+// growth stage data, growing
+// make some sprites at home for testing
+// also break it up into multiple files maybe?     graphics on separate, plot on separate
