@@ -49,21 +49,27 @@ var Game = {
 			this.name = name;
 			this.id = id;
 			this.dn = displayName;
+			this.growth = {};
 			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}};
 			this.inh = {};
 		}
 		setinh() {
 			this.inh.events = this.events;
+			this.inh.growth = this.growth;
 			return this;
 		}
 		addEvent(name, fun) {
 			this.events[name] = fun;
 			return this;
 		}
+		setGrowth(data) {
+			this.growth = data;
+			return this;
+		}
 	},
 	init: () => {
 		Game.plants = [
-			new Game.Plant('test', 0, 'Test').addEvent('pretick', () => {console.log('hi')}).setinh()
+			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: ['images/grassbad.png']}).setinh()
 		];
 	}
 };
@@ -82,7 +88,7 @@ var Plot = {
 				cell.classList.add('tile_b');
 				cell.onclick = Game.clickTile;
 				Plot.tiles[i].push(new Plot.Tile(j, i, 0));
-				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[0]);
+				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[0], Plot.tiles[i][j]);
 			}
 		}
 	},
@@ -97,9 +103,14 @@ var Plot = {
 		}
 	},
 	PlantTile: class {
-		constructor(plant) {
+		constructor(plant, tile) {
 			this.plant = plant;
 			this.inh = plant.inh;
+			this.tile = tile;
+			this.stage = 0;
+			this.life = 0;
+			this.stagetime = 0;
+			this.sprite = new Graphics.AnimatedSpriteElement(this.tile.x, this.tile.y, { img: this.inh.growth.stages[0], s: 16, opacity: 1.0, viewLayer: 3 }).add();
 		}
 	},
 	execute: (func) => {
@@ -111,12 +122,15 @@ var Plot = {
 	},
 	tick: () => {
 		Plot.execute((tile, i, j) => {tile.plant.inh.events.pretick()});
+		Plot.execute((tile, i, j) => {
+			
+		});
 	},
 	render: () => {
 		let ps = Graphics.screenInfo().ps;
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/grassbad.png', s: 16, opacity: 1.0, viewLayer: 3 }).add();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/grassbad.png', s: 16, opacity: 1.0, viewLayer: 2 }).add();
 			}
 		}
 	},
@@ -130,6 +144,9 @@ var Plot = {
 				sprite.pos.y = i * ps + Plot.pos.y;
 				tile.x = sprite.pos.x;
 				tile.y = sprite.pos.y;
+				sprite = Graphics.elems[tile.plant.sprite];
+				sprite.pos.x = tile.x;
+				sprite.pos.y = tile.y;
 				sprite.prop();
 			}
 		}
@@ -294,3 +311,5 @@ function start() {
 // growth stage data, growing
 // make some sprites at home for testing
 // also break it up into multiple files maybe?     graphics on separate, plot on separate
+//add spriteelement option for 'panned', which means that there is no extra code needed and the sprite will move with the plot
+//make stages include sprite data (not just name)
