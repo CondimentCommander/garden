@@ -69,7 +69,7 @@ var Game = {
 	},
 	init: () => {
 		Game.plants = [
-			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 3, anim: true }, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 3, anim: false }]}).setinh()
+			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [new Graphics.SpriteElement(0, 0, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 3 }), new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 3 })]}).setinh()
 		];
 	}
 };
@@ -111,8 +111,12 @@ var Plot = {
 			this.life = 0;
 			this.stagetime = 0;
 			this.grows = 0;
-			if (this.inh.growth.stages[0].anim) this.sprite = new Graphics.AnimatedSpriteElement(this.tile.x, this.tile.y, this.inh.growth.stages[0]).add();
-			if (!this.inh.growth.stages[0].anim) this.sprite = new Graphics.SpriteElement(this.tile.x, this.tile.y, this.inh.growth.stages[0]).add();
+			this.sprite = this.inh.growth.stages[0];
+			//console.log(tile.x, tile.y);
+			console.log(this.sprite);
+			this.sprite.pos.x = tile.x;
+			this.sprite.pos.y = tile.y;
+			this.sprite = this.sprite.add();
 		}
 	},
 	execute: (func) => {
@@ -123,9 +127,9 @@ var Plot = {
 		}
 	},
 	tick: () => {
-		Plot.execute((tile, i, j) => {tile.plant.inh.events.pretick()});
-		Plot.execute((tile, i, j) => {Plot.grow(tile)});
-		console.log('tick!');
+		Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
+		Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
+		//console.log('tick!');
 	},
 	stop: () => {
 		clearInterval(Plot.cycle);
@@ -134,7 +138,7 @@ var Plot = {
 		let plant = tile.plant;
 		plant.life++;
 		if (plant.inh.growth.speed == 0) return;
-		let length = plant.inh.growth.stages.length;
+		let length = plant.inh.growth.stages.length - 1;
 		if (plant.stage == 0) {
 			plant.stagetime++;
 			let chance = plant.inh.growth.speed * 0.04;
@@ -147,9 +151,10 @@ var Plot = {
 				if (plant.grows >= length) {
 					plant.stage = 1;
 					plant.stagetime = 0;
-					plant.grows = 0;
+					plant.grows = length;
 					Plot.mutate(tile);
 				}
+				Graphics.elems[plant.sprite].replace(plant.inh.growth.stages[plant.grows]);
 			}
 		} else {
 			if (plant.stage == 1) {
@@ -161,7 +166,7 @@ var Plot = {
 			} else {
 				if (plant.stage == 2) {
 					plant.stagetime++;
-					let chance = plant.inh.growth.speed * 0.01 * plant.inh.decay * Math.pow(plant.stagetime, 2);
+					let chance = plant.inh.growth.speed * 0.02 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2);
 					let rand = Math.random();
 					if (rand <= chance) Plot.decay(tile);
 				}
@@ -172,7 +177,13 @@ var Plot = {
 		
 	},
 	decay: (tile) => {
-		console.log('goodbye');
+		Plot.uproot(tile);
+	},
+	uproot: (tile) => {
+		if (Graphics.elems[tile.plant.sprite] == undefined) return;
+		console.log(tile.plant);
+		Graphics.elems[tile.plant.sprite].remove();
+		tile.plant = undefined;
 	},
 	render: () => {
 		let ps = Graphics.screenInfo().ps;
@@ -192,10 +203,13 @@ var Plot = {
 				sprite.pos.y = i * ps + Plot.pos.y;
 				tile.x = sprite.pos.x;
 				tile.y = sprite.pos.y;
-				sprite = Graphics.elems[tile.plant.sprite];
-				sprite.pos.x = tile.x;
-				sprite.pos.y = tile.y;
-				sprite.prop();
+				if (tile.plant != undefined) {
+					sprite = Graphics.elems[tile.plant.sprite];
+					console.log(sprite);
+					sprite.pos.x = tile.x;
+					sprite.pos.y = tile.y;
+					sprite.prop();
+				}
 			}
 		}
 		for (let i = 0; i < 11; i++) {
@@ -227,18 +241,17 @@ function start() {
 	Graphics.ov = Graphics.overlay.getContext('2d');
 	Graphics.canvas = document.getElementById('can');
 	Graphics.ctx = Graphics.canvas.getContext('2d');
-	Game.init();
 	Graphics.initial();
+	Game.init();
 	Plot.generate();
 	Plot.render();
 	Plot.cycle = setInterval(Plot.tick, 500);
 	console.log('Loaded!');
 }
 
-// growth stage data, growing
+//fix decay, moving the plant sprite, and stuff like that
+
 // make some sprites at home for testing
-// also break it up into multiple files maybe?     graphics on separate, plot on separate
-//add spriteelement option for 'panned', which means that there is no extra code needed and the sprite will move with the plot
-//make stages include sprite data (not just name)
-//decay stuff
-//yeah boi
+// make stages include sprite data (not just name)
+// decay stuff
+// yeah boi

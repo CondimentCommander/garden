@@ -18,6 +18,7 @@ var Graphics = {
 			return rand;
 		}
 		add() {
+			this.id = this.randomId();
 			Graphics.elems[this.id] = this;
 			Graphics.elemLayers[this.lr][this.id] = this;
 			return this.id;
