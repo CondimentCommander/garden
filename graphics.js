@@ -11,14 +11,14 @@ var Graphics = {
 			this.pan = data.pan;
 		}
 		randomId() {
-			let rand = Math.floor(Math.random() * 10000);
+			let rand = Math.floor(Math.random() * 100000);
 			while (Object.keys(Graphics.elems).includes(rand.toString())) {
-				rand = Math.floor(Math.random() * 10000);
+				rand = Math.floor(Math.random() * 100000);
 			}
 			return rand;
 		}
 		add() {
-			this.id = this.randomId();
+			//this.id = this.randomId();
 			Graphics.elems[this.id] = this;
 			Graphics.elemLayers[this.lr][this.id] = this;
 			return this.id;
@@ -39,9 +39,9 @@ var Graphics = {
 		}
 		replace(rp) {
 			rp.id = this.id;
-			Graphics.elemLayers[this.lr][this.id] = rp;
-			//Graphics.elemLayers[this.lr][this.id].id = this.id;
-			Graphics.elems[this.id] = rp;
+			Graphics.elemLayers[this.lr][rp.id] = rp;
+			Graphics.elemLayers[this.lr][rp.id].id = rp.id;
+			Graphics.elems[rp.id] = rp;
 		}
 	},
 	defineElements: () => {

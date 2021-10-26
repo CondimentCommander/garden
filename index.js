@@ -69,7 +69,8 @@ var Game = {
 	},
 	init: () => {
 		Game.plants = [
-			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [new Graphics.SpriteElement(0, 0, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 3 }), new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 3 })]}).setinh()
+			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [new Graphics.SpriteElement(0, 0, { img: 'images/lime/2.png', s: 16, opacity: 0.5, viewLayer: 3 }), new Graphics.SpriteElement(0, 0, { img: 'images/lime/1.png', s: 16, opacity: 0.5, viewLayer: 3 })]}).setinh(),
+			new Game.Plant('empty', 1, 'None').setGrowth({speed: 1, matureTime: 5, decay: 1, stages: [new Graphics.SpriteElement(0, 0, { img: 'images/grassbad.png', s: 16, opacity: 0, viewLayer: 3 })]}).setinh()
 		];
 	}
 };
@@ -116,7 +117,9 @@ var Plot = {
 			console.log(this.sprite);
 			this.sprite.pos.x = tile.x;
 			this.sprite.pos.y = tile.y;
+			this.sprite.id = this.sprite.randomId();
 			this.sprite = this.sprite.add();
+			console.log(this.sprite);
 		}
 	},
 	execute: (func) => {
@@ -154,6 +157,7 @@ var Plot = {
 					plant.grows = length;
 					Plot.mutate(tile);
 				}
+				//console.log(plant.grows);
 				Graphics.elems[plant.sprite].replace(plant.inh.growth.stages[plant.grows]);
 			}
 		} else {
@@ -180,10 +184,10 @@ var Plot = {
 		Plot.uproot(tile);
 	},
 	uproot: (tile) => {
-		if (Graphics.elems[tile.plant.sprite] == undefined) return;
-		console.log(tile.plant);
+		if (Graphics.elems[tile.plant.sprite] == null) return;
+		//console.log(tile.plant);
 		Graphics.elems[tile.plant.sprite].remove();
-		tile.plant = undefined;
+		tile.plant = new Plot.PlantTile(Game.plants[1], tile);
 	},
 	render: () => {
 		let ps = Graphics.screenInfo().ps;
@@ -203,13 +207,12 @@ var Plot = {
 				sprite.pos.y = i * ps + Plot.pos.y;
 				tile.x = sprite.pos.x;
 				tile.y = sprite.pos.y;
-				if (tile.plant != undefined) {
-					sprite = Graphics.elems[tile.plant.sprite];
-					console.log(sprite);
-					sprite.pos.x = tile.x;
-					sprite.pos.y = tile.y;
-					sprite.prop();
-				}
+				sprite.prop();
+				sprite = Graphics.elems[tile.plant.sprite];
+				//console.log(sprite);
+				sprite.pos.x = tile.x;
+				sprite.pos.y = tile.y;
+				sprite.prop();
 			}
 		}
 		for (let i = 0; i < 11; i++) {
