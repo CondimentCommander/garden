@@ -6,7 +6,7 @@ var Graphics = {
 			if (this.lr == undefined) this.lr = 5;
 			this.op = data.opacity;
 			this.data = data;
-			this.id = this.randomId();
+			this.id = 0;
 			this.canvas = this.renderInfo();
 			this.pan = data.pan;
 		}
@@ -17,15 +17,24 @@ var Graphics = {
 			}
 			return rand;
 		}
+		refreshId() {
+			let id = this.randomId();
+			this.id = id;
+			return id;
+		}
 		add() {
-			//this.id = this.randomId();
+			//console.log(this.id, 'before');
+			this.id = this.randomId();
+			//console.log(this.id, 'after');
 			Graphics.elems[this.id] = this;
 			Graphics.elemLayers[this.lr][this.id] = this;
 			return this.id;
 		}
 		remove() {
-			delete Graphics.elemLayers[this.lr][this.id];
-			delete Graphics.elems[this.id];
+			let id = this.id;
+			let lr = this.lr;
+			delete Graphics.elemLayers[lr][id];
+			delete Graphics.elems[id];
 		}
 		renderInfo() {
 			if (this.lr > 5) return Graphics.ov;
@@ -40,8 +49,11 @@ var Graphics = {
 		replace(rp) {
 			rp.id = this.id;
 			Graphics.elemLayers[this.lr][rp.id] = rp;
-			Graphics.elemLayers[this.lr][rp.id].id = rp.id;
+			//Graphics.elemLayers[this.lr][rp.id].id = rp.id;
 			Graphics.elems[rp.id] = rp;
+		}
+		replaceData(dt) {
+			
 		}
 	},
 	defineElements: () => {
@@ -81,6 +93,11 @@ var Graphics = {
 				this.frame++;
 				if (this.frame >= (this.count) * this.frametime) this.frame = 0;
 			}
+		}
+		Graphics.fromData = function (dt, x, y) {
+			let sprite = new Graphics.SpriteElement(x, y, dt)
+			if (dt.ft != undefined) sprite = new Graphics.AnimatedSpriteElement(x, y, dt);
+			return sprite;
 		}
 	},
 	setPos: (elem, x, y) => {

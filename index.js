@@ -69,8 +69,8 @@ var Game = {
 	},
 	init: () => {
 		Game.plants = [
-			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [new Graphics.SpriteElement(0, 0, { img: 'images/lime/2.png', s: 16, opacity: 0.5, viewLayer: 3 }), new Graphics.SpriteElement(0, 0, { img: 'images/lime/1.png', s: 16, opacity: 0.5, viewLayer: 3 })]}).setinh(),
-			new Game.Plant('empty', 1, 'None').setGrowth({speed: 1, matureTime: 5, decay: 1, stages: [new Graphics.SpriteElement(0, 0, { img: 'images/grassbad.png', s: 16, opacity: 0, viewLayer: 3 })]}).setinh()
+			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/lime/2.png', s: 16, opacity: 0.5, viewLayer: 3 }, { img: 'images/lime/1.png', s: 16, opacity: 0.5, viewLayer: 3 }]}).setinh(),
+			new Game.Plant('empty', 1, 'None').setGrowth({speed: 1, matureTime: 5, decay: 1, stages: [0, 0, { img: 'images/grassbad.png', s: 16, opacity: 0, viewLayer: 3 }]}).setinh()
 		];
 	}
 };
@@ -112,12 +112,10 @@ var Plot = {
 			this.life = 0;
 			this.stagetime = 0;
 			this.grows = 0;
-			this.sprite = this.inh.growth.stages[0];
+			this.sprite = Graphics.fromData(this.inh.growth.stages[0], tile.x, tile.y);
 			//console.log(tile.x, tile.y);
 			console.log(this.sprite);
-			this.sprite.pos.x = tile.x;
-			this.sprite.pos.y = tile.y;
-			this.sprite.id = this.sprite.randomId();
+			//this.sprite.id = this.sprite.randomId();
 			this.sprite = this.sprite.add();
 			console.log(this.sprite);
 		}
@@ -158,7 +156,7 @@ var Plot = {
 					Plot.mutate(tile);
 				}
 				//console.log(plant.grows);
-				Graphics.elems[plant.sprite].replace(plant.inh.growth.stages[plant.grows]);
+				Graphics.elems[plant.sprite].replace(Graphics.fromData(plant.inh.growth.stages[plant.grows], tile.x, tile.y));
 			}
 		} else {
 			if (plant.stage == 1) {
@@ -246,6 +244,7 @@ function start() {
 	Graphics.ctx = Graphics.canvas.getContext('2d');
 	Graphics.initial();
 	Game.init();
+	console.log(Game.plants[0].growth.stages[0]);
 	Plot.generate();
 	Plot.render();
 	Plot.cycle = setInterval(Plot.tick, 500);
@@ -254,7 +253,7 @@ function start() {
 
 //fix decay, moving the plant sprite, and stuff like that
 
-// make some sprites at home for testing
+// fix lma
 // make stages include sprite data (not just name)
 // decay stuff
 // yeah boi
