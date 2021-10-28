@@ -9,6 +9,7 @@ var Graphics = {
 			this.id = 0;
 			this.canvas = this.renderInfo();
 			this.pan = data.pan;
+			this.tag = data.tag;
 		}
 		randomId() {
 			let rand = Math.floor(Math.random() * 100000);
@@ -23,9 +24,7 @@ var Graphics = {
 			return id;
 		}
 		add() {
-			//console.log(this.id, 'before');
 			this.id = this.randomId();
-			//console.log(this.id, 'after');
 			Graphics.elems[this.id] = this;
 			Graphics.elemLayers[this.lr][this.id] = this;
 			return this.id;
@@ -41,7 +40,7 @@ var Graphics = {
 			if (this.lr <= 5) return Graphics.ctx;
 		}
 		predraw() { //for general actions done before drawing an element
-			Graphics.ctx.globalAlpha = this.opacity; //used to set opacity of the element
+			this.canvas.globalAlpha = this.op; //used to set opacity of the element
 		}
 		prop() { //updates the current value of the element in the element list to be in the layer
 			Graphics.elemLayers[this.lr][this.id] = this;
@@ -126,6 +125,11 @@ var Graphics = {
 			}
 		}
 	},
+	pgBar: () => {
+		let bar = Graphics.progress;
+		Graphics.prog -= 1;
+		bar.style.width = Graphics.prog + "px";
+	},
 	initial: () => {
 		Graphics.defineElements();
 		for (let i = 0; i < 11; i++) {
@@ -133,6 +137,8 @@ var Graphics = {
 		}
 		//Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
 		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
+		Graphics.progress = document.getElementById('progress');
+		Graphics.prog = 5000 / 30;
 		Graphics.interval = setInterval(Graphics.update, 1000 / 30);
 	},
 	update: () => {
@@ -142,6 +148,7 @@ var Graphics = {
 				element.draw();
 			});
 		}
+		Graphics.pgBar();
 	},
 	stop: () => {
 		clearInterval(Graphics.interval);
