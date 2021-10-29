@@ -37,8 +37,8 @@ var Game = {
 	},
 	panMove: (event) => {
 		if (Game.mouseDown) {
-			let moveX = event.offsetX - Game.panStartX;
-			let moveY = event.offsetY - Game.panStartY;
+			let moveX = (event.offsetX - Game.panStartX);
+			let moveY = (event.offsetY - Game.panStartY);
 			let calcX = Game.plotX + moveX;
 			let calcY = Game.plotY + moveY;
 			let ts = Graphics.screenInfo().ts;
@@ -80,7 +80,8 @@ var Game = {
 	init: () => {
 		Game.plants = [
 			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/lime/2.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }, { img: 'images/lime/1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }]}).setinh(),
-			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', s: Plot.zoom / 2, opacity: 0, viewLayer: 3 }]}).setinh()
+			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', s: Plot.zoom / 2, opacity: 0, viewLayer: 3 }]}).setinh(),
+			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: Plot.zoom / 2, sy: Plot.zoom * 1.5, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: Plot.zoom, sy: Plot.zoom * 1.5, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: Plot.zoom * 1.5, sy: Plot.zoom * 1.5, sls: Plot.zoom / 32 }]}).setinh(),
 		];
 	},
 	dev: {
@@ -92,7 +93,7 @@ var Plot = {
 	width: 3,
 	height: 3,
 	pos: { x: 0, y: 0 },
-	zoom: 32,
+	zoom: 64,
 	generate: () => {
 		let ps = Graphics.screenInfo().ps;
 		for (let i = 0; i < Plot.height; i++) {
@@ -105,7 +106,7 @@ var Plot = {
 				cell.onmouseover = Game.hoverTile;
 				cell.onmouseout = Game.hoverOffTile;
 				Plot.tiles[i].push(new Plot.Tile(j * ps, i * ps, 0));
-				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[0], Plot.tiles[i][j]);
+				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[2], Plot.tiles[i][j]);
 			}
 		}
 	},
@@ -207,7 +208,7 @@ var Plot = {
 		let ps = Graphics.screenInfo().ps;
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/grassbad.png', s: Plot.zoom / 2, opacity: 1.0, viewLayer: 2 }).add();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32 }).add();
 			}
 		}
 	},
@@ -237,6 +238,14 @@ var Plot = {
 			});
 		}
 	},
+	changeZoom: (z) => {
+		Plot.zoom = z;
+		let tiles = document.getElementsByClassName('tile_b');
+		for (let i = 0; i < tiles.length; i++) {
+			tiles[i].style.padding = Plot.zoom / 4 + 'px';
+			//tiles[i].style.height = Plot.zoom / 16 + 'px';
+		}
+	},
 	renderUpdate: () => {
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
@@ -262,10 +271,12 @@ function start() {
 	Game.init();
 	Plot.generate();
 	Plot.render();
+	Plot.changeZoom(64);
 	Plot.cycle = setInterval(Plot.tick, 5000);
 	console.log('Loaded!');
 }
 
+//zoom values dont change when making new sprites
 // fix lma
 // make stages include sprite data (not just name)
 // decay stuff

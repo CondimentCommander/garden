@@ -67,10 +67,17 @@ var Graphics = {
 				};
 				this.image.src = this.img;
 				this.scale = data.s;
+				this.slicex = data.sx;
+				this.slicey = data.sy;
+				this.slicescale = data.sls;
 			}
 			draw() {
 				this.predraw();
-				this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
+				if (this.slicex == undefined) {
+					this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
+				} else {
+					this.canvas.drawImage(this.image, this.slicex, this.slicey, this.scale / this.slicescale, this.scale / this.slicescale, this.pos.x, this.pos.y, this.scale, this.scale);
+				}
 			}
 		}
 		Graphics.AnimatedSpriteElement = class extends Graphics.SpriteElement {
@@ -107,7 +114,7 @@ var Graphics = {
 	screenInfo: () => {
 		let pixelsize = Plot.zoom / 2;
 		let screensize = Plot.farm.clientWidth;
-		let tilesize = screensize / Plot.zoom;
+		let tilesize = screensize / (512 / pixelsize);
 		return {ts: tilesize, ps: pixelsize, ss: screensize};
 	},
 	refresh: () => {
