@@ -1,4 +1,5 @@
 var Graphics = {
+	frameRate: 30,
 	ScreenElement: class {
 		constructor(x, y, data = { viewLayer: 5, opacity: 1.0 }) {
 			this.pos = {x: x, y: y};
@@ -132,6 +133,19 @@ var Graphics = {
 			}
 		}
 	},
+	background: () => {
+		
+		let image = new Image();
+		image.src = 'images/sprites1.png';
+		image.onload = () => {
+			console.log('ok');
+			for (let i = 0; i < 512; i+=16) {
+				for (let j = 0; j < 512; j+=16) {
+					Graphics.ctx.drawImage(image, 16, 32, 16, 16, i, j, 16, 16);
+				}
+			}
+		};
+	},
 	pgBar: () => {
 		let bar = Graphics.progress;
 		Graphics.prog -= 1;
@@ -145,11 +159,12 @@ var Graphics = {
 		//Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
 		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
 		Graphics.progress = document.getElementById('progress');
-		Graphics.prog = 5000 / 30;
-		Graphics.interval = setInterval(Graphics.update, 1000 / 30);
+		Graphics.prog = Plot.cycletime / Graphics.frameRate;
+		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
 	},
 	update: () => {
 		Graphics.refresh();
+		Graphics.background();
 		for (let i = 0; i < 11; i++) {
 			Object.values(Graphics.elemLayers[i]).forEach((element) => {
 				element.draw();

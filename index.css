@@ -27,13 +27,14 @@
 	padding: 8px;
 	background-color: black;
 	box-sizing: border-box;
-	opacity: 0.1;
+	opacity: 0;
 }
 #farmview {
 	width: 512px;
 	height: 512px;
 	display: block;
 	border-style: solid;
+	user-select: none;
 }
 #menu {
 	width: calc(100% - 512px);

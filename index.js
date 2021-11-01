@@ -1,6 +1,12 @@
 var rw = 1.0;
 var rh = 1.0;
 
+function lockValue(v, min, max) {
+	if (v < min) return min;
+	if (v > max) return max;
+	return v;
+}
+
 var Game = {
 	clickTile: (ev) => {
 		//console.log(ev.srcElement.cellIndex, ev.srcElement.parentElement.rowIndex);
@@ -12,13 +18,14 @@ var Game = {
 	},
 	hoverTile: (ev) => {
 		let tile = Plot.tiles[ev.srcElement.parentElement.rowIndex][ev.srcElement.cellIndex];
-		Graphics.elems[tile.sprite].op = 0.6;
-		Graphics.elems[tile.plant.sprite].op = 0.8;
+		Graphics.elems[tile.sprite].op = lockValue(Graphics.elems[tile.sprite].op - 0.4, 0, 1);
+		Graphics.elems[tile.plant.sprite].optemp = Graphics.elems[tile.plant.sprite].op;
+		Graphics.elems[tile.plant.sprite].op = lockValue(Graphics.elems[tile.plant.sprite].op - 0.2, 0, 1);
 	},
 	hoverOffTile: (ev) => {
 		let tile = Plot.tiles[ev.srcElement.parentElement.rowIndex][ev.srcElement.cellIndex];
 		Graphics.elems[tile.sprite].op = 1;
-		Graphics.elems[tile.plant.sprite].op = 1;
+		Graphics.elems[tile.plant.sprite].op = Graphics.elems[tile.plant.sprite].optemp;
 	},
 	mouseDown: false,
 	panStartX: 0,
@@ -81,7 +88,7 @@ var Game = {
 		Game.plants = [
 			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/lime/2.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }, { img: 'images/lime/1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }]}).setinh(),
 			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', s: Plot.zoom / 2, opacity: 0, viewLayer: 3 }]}).setinh(),
-			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: Plot.zoom / 2, sy: Plot.zoom * 1.5, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: Plot.zoom, sy: Plot.zoom * 1.5, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: Plot.zoom * 1.5, sy: Plot.zoom * 1.5, sls: Plot.zoom / 32 }]}).setinh(),
+			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, sls: Plot.zoom / 32 }]}).setinh(),
 		];
 	},
 	dev: {
@@ -94,6 +101,7 @@ var Plot = {
 	height: 3,
 	pos: { x: 0, y: 0 },
 	zoom: 64,
+	cycletime: 5000,
 	generate: () => {
 		let ps = Graphics.screenInfo().ps;
 		for (let i = 0; i < Plot.height; i++) {
@@ -106,7 +114,7 @@ var Plot = {
 				cell.onmouseover = Game.hoverTile;
 				cell.onmouseout = Game.hoverOffTile;
 				Plot.tiles[i].push(new Plot.Tile(j * ps, i * ps, 0));
-				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[2], Plot.tiles[i][j]);
+				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[1], Plot.tiles[i][j]);
 			}
 		}
 	},
@@ -144,7 +152,7 @@ var Plot = {
 	tick: () => {
 		Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
 		Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
-		Graphics.prog = 5000 / 30;
+		Graphics.prog = Plot.cycletime / 30;
 		//console.log('tick!');
 	},
 	stop: () => {
@@ -153,6 +161,7 @@ var Plot = {
 	grow: (tile) => {
 		let plant = tile.plant;
 		plant.life++;
+		if (plant.plant.id == 1 && tile.soil == 0) {Plot.growWeed(tile); return}
 		if (plant.inh.growth.speed == 0) return;
 		let length = plant.inh.growth.stages.length - 1;
 		if (plant.stage == 0) {
@@ -182,11 +191,19 @@ var Plot = {
 			} else {
 				if (plant.stage == 2) {
 					plant.stagetime++;
-					let chance = plant.inh.growth.speed * 0.016 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2);
+					let chance = plant.inh.growth.speed * 0.016 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2) * Game.dev.fertillizer;
 					let rand = Math.random();
 					if (rand <= chance) Plot.decay(tile);
 				}
 			}
+		}
+	},
+	growWeed: (tile) => {
+		let plant = tile.plant;
+		let chance = 0.012 * Game.dev.fertilizer;
+		let rand = Math.random();
+		if (rand <= chance) {
+			Plot.plant(tile, Game.plants[2]);
 		}
 	},
 	mutate: (tile) => {
@@ -208,7 +225,7 @@ var Plot = {
 		let ps = Graphics.screenInfo().ps;
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32 }).add();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32 }).add();
 			}
 		}
 	},
@@ -272,7 +289,7 @@ function start() {
 	Plot.generate();
 	Plot.render();
 	Plot.changeZoom(64);
-	Plot.cycle = setInterval(Plot.tick, 5000);
+	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
 	console.log('Loaded!');
 }
 

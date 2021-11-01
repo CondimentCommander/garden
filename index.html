@@ -7,14 +7,14 @@
 </head>
 <body onload="start();">
 	<canvas class="canvas" id="overlay" width="2048" height="1024"></canvas>
-	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)">
-		<div id="progress"></div>
+	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" oncontextmenu="return false">
 		<div id="plot">
 			<table id="plott">
 			
 			</table>
 		</div>
 		<canvas class="canvas" id="can" width="512" height="512"></canvas>
+		<div id="progress"></div>
 	</div>
 	<div class="section" id="seeds" onmouseup="Game.panStop(event)">
 		
