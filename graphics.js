@@ -74,10 +74,12 @@ var Graphics = {
 			}
 			draw() {
 				this.predraw();
-				if (this.slicex == undefined) {
-					this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
-				} else {
-					this.canvas.drawImage(this.image, this.slicex, this.slicey, this.scale / this.slicescale, this.scale / this.slicescale, this.pos.x, this.pos.y, this.scale, this.scale);
+				if (this.ready) {
+					if (this.slicex == undefined) {
+						this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
+					} else {
+						this.canvas.drawImage(this.image, this.slicex, this.slicey, this.scale / this.slicescale, this.scale / this.slicescale, this.pos.x, this.pos.y, this.scale, this.scale);
+					}
 				}
 			}
 		}
@@ -99,6 +101,30 @@ var Graphics = {
 				this.canvas.drawImage(this.image, calcpos, calcrow, size, size, this.pos.x, this.pos.y, size, size);
 				this.frame++;
 				if (this.frame >= (this.count) * this.frametime) this.frame = 0;
+			}
+		}
+		Graphics.PatternElement = class extends Graphics.ScreenElement {
+			constructor(x = 0, y = 0, data = {img: '', w: 16, h: 16, viewLayer: 5, opacity: 1.0}) {
+				super(x, y, data);
+				this.img = data.img;
+				this.image = new Image();
+				this.ready = false;
+				this.image.onload = () => {
+					this.ready = true;
+					console.log('ready');
+				};
+				this.image.src = this.img;
+				this.width = data.w;
+				this.height = data.h;
+			}
+			draw() {
+				this.predraw();
+				if (this.ready) {
+					this.pat = this.canvas.createPattern(this.image, 'repeat');
+					this.canvas.rect(this.pos.x, this.pos.y, this.width, this.height);
+					this.canvas.fillStyle = this.pat;
+					this.canvas.fill();
+				}
 			}
 		}
 		Graphics.fromData = function (dt, x, y) {
@@ -133,19 +159,6 @@ var Graphics = {
 			}
 		}
 	},
-	background: () => {
-		
-		let image = new Image();
-		image.src = 'images/sprites1.png';
-		image.onload = () => {
-			console.log('ok');
-			for (let i = 0; i < 512; i+=16) {
-				for (let j = 0; j < 512; j+=16) {
-					Graphics.ctx.drawImage(image, 16, 32, 16, 16, i, j, 16, 16);
-				}
-			}
-		};
-	},
 	pgBar: () => {
 		let bar = Graphics.progress;
 		Graphics.prog -= 1;
@@ -158,13 +171,13 @@ var Graphics = {
 		}
 		//Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
 		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
+		Graphics.bg = new Graphics.PatternElement(0, 0, { img: 'images/bg.png', w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
 		Graphics.progress = document.getElementById('progress');
 		Graphics.prog = Plot.cycletime / Graphics.frameRate;
 		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
 	},
 	update: () => {
 		Graphics.refresh();
-		Graphics.background();
 		for (let i = 0; i < 11; i++) {
 			Object.values(Graphics.elemLayers[i]).forEach((element) => {
 				element.draw();

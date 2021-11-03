@@ -88,11 +88,11 @@ var Game = {
 		Game.plants = [
 			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/lime/2.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }, { img: 'images/lime/1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }]}).setinh(),
 			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', s: Plot.zoom / 2, opacity: 0, viewLayer: 3 }]}).setinh(),
-			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, sls: Plot.zoom / 32 }]}).setinh(),
+			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 3, decay: 1, stages: [{ img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, sls: Plot.zoom / 32 }, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, sls: Plot.zoom / 32 }]}).setinh(),
 		];
 	},
 	dev: {
-		fertilizer: 1
+		fertilizer: 100
 	}
 };
 var Plot = {
@@ -191,8 +191,9 @@ var Plot = {
 			} else {
 				if (plant.stage == 2) {
 					plant.stagetime++;
-					let chance = plant.inh.growth.speed * 0.016 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2) * Game.dev.fertillizer;
+					let chance = plant.inh.growth.speed * 0.026 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2) * Game.dev.fertillizer;
 					let rand = Math.random();
+					Graphics.elems[plant.sprite].op = lockValue(1 - chance * 4);
 					if (rand <= chance) Plot.decay(tile);
 				}
 			}
@@ -293,8 +294,5 @@ function start() {
 	console.log('Loaded!');
 }
 
-//zoom values dont change when making new sprites
-// fix lma
-// make stages include sprite data (not just name)
-// decay stuff
-// yeah boi
+// fix tick timer
+// fix opacity changes on multiple sprites (top right tile)
