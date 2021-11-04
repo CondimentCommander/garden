@@ -27,24 +27,33 @@
 	padding: 8px;
 	background-color: black;
 	box-sizing: border-box;
-	opacity: 0;
+	opacity: 0.4;
+}
+#ticktimer {
+	color: white;
+	opacity: 1;
+	font-size: 34pt;
+	z-index: 2;
+	position: absolute;
 }
 #farmview {
-	width: 512px;
-	height: 512px;
+	width: 100vh;
+	height: 100vh;
 	display: block;
 	border-style: solid;
 	user-select: none;
+	margin: auto;
 }
 #menu {
-	width: calc(100% - 512px);
+	width: calc(100vw - 100vh - 8px);
 	height: 100%;
 	border-style: solid;
 	border-left-style: none;
 	position: absolute;
-	left: 512px;
+	left: 100vh;
 	top: 0px;
 	bottom: 0px;
+	display: none;
 }
 #seeds {
 	height: calc(100vh - 512px);
@@ -52,12 +61,12 @@
 	border-style: solid;
 	border-top-style: none;
 	margin-top: 0px;
-	display: block;
+	display: none;
 }
 #can {
 	position: absolute;
-	width: 496px;
-	height: 496px;
+	width: calc(100vh - 16px);
+	height: calc(100vh - 16px);
 }
 #progress {
 	pointer-events: none;
@@ -117,6 +126,7 @@
 body {
 	margin: 0px;
 	height: 100vh;
+	font-family: 'Rubik', sans-serif;
 }
 .canvas {
 	image-rendering: pixelated;

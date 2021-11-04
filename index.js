@@ -55,7 +55,8 @@ var Game = {
 			if (calcY < 8) calcY = 8;
 			if (calcY > ss - Plot.height * ts) calcY = ss - Plot.height * ts + 8;
 			Plot.pos = { x: Math.round(calcX / ts - 0.5) * (Plot.zoom / 2), y: Math.round(calcY / ts - 0.5) * (Plot.zoom / 2)};
-			calcX = Math.round(calcX / ts - 0.5) * ts + 8;
+			let margin = document.getElementById('farmview').getBoundingClientRect().left;
+			calcX = Math.round(calcX / ts - 0.5) * ts + 8 + margin;
 			calcY = Math.round(calcY / ts - 0.5) * ts + 8;
 			Graphics.setPos(Plot.tb, calcX, calcY);
 			Plot.move();
@@ -92,7 +93,7 @@ var Game = {
 		];
 	},
 	dev: {
-		fertilizer: 100
+		fertilizer: 1
 	}
 };
 var Plot = {
@@ -153,7 +154,11 @@ var Plot = {
 		Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
 		Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
 		Graphics.prog = Plot.cycletime / 30;
-		//console.log('tick!');
+		clearInterval(Graphics.timeInterval);
+		Graphics.time = Plot.cycletime / 1000 + 1;
+		Graphics.timer();
+		Graphics.timeInterval = setInterval(Graphics.timer, 1000);
+		console.log('tick!');
 	},
 	stop: () => {
 		clearInterval(Plot.cycle);
@@ -257,10 +262,11 @@ var Plot = {
 		}
 	},
 	changeZoom: (z) => {
+		info = Graphics.screenInfo();
 		Plot.zoom = z;
 		let tiles = document.getElementsByClassName('tile_b');
 		for (let i = 0; i < tiles.length; i++) {
-			tiles[i].style.padding = Plot.zoom / 4 + 'px';
+			tiles[i].style.padding = info.ts / 2 + 'px';
 			//tiles[i].style.height = Plot.zoom / 16 + 'px';
 		}
 	},
@@ -290,7 +296,12 @@ function start() {
 	Plot.generate();
 	Plot.render();
 	Plot.changeZoom(64);
+	
+	Graphics.timerEl = document.getElementById('ticktimer');
+	Graphics.time = Plot.cycletime / 1000;
+	Plot.tick();
 	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
+	
 	console.log('Loaded!');
 }
 

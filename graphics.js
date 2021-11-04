@@ -160,9 +160,18 @@ var Graphics = {
 		}
 	},
 	pgBar: () => {
-		let bar = Graphics.progress;
-		Graphics.prog -= 1;
-		bar.style.width = Graphics.prog + "px";
+		//let bar = Graphics.progress;
+		//Graphics.prog -= 1;
+		//bar.style.width = Graphics.prog + "px";
+	},
+	timer: () => {
+		console.log('timer');
+		Graphics.time--;
+		//if (Graphics.time < 1) Graphics.time = Plot.cycletime / 1000;
+		Graphics.timerEl.innerHTML = Graphics.time + "s";
+	},
+	timerReset: () => {
+		//Graphics.time = Plot.cycletime / Graphics.frameRate;
 	},
 	initial: () => {
 		Graphics.defineElements();
@@ -173,6 +182,9 @@ var Graphics = {
 		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
 		Graphics.bg = new Graphics.PatternElement(0, 0, { img: 'images/bg.png', w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
 		Graphics.progress = document.getElementById('progress');
+		
+		//Graphics.timeInterval = setInterval(Graphics.timer, 1000);
+		//Graphics.time = Plot.cycletime / Graphics.frameRate;
 		Graphics.prog = Plot.cycletime / Graphics.frameRate;
 		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
 	},
@@ -183,7 +195,8 @@ var Graphics = {
 				element.draw();
 			});
 		}
-		Graphics.pgBar();
+		//Graphics.pgBar();
+		//Graphics.timer();
 	},
 	stop: () => {
 		clearInterval(Graphics.interval);
