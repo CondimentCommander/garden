@@ -25,9 +25,9 @@
 	cursor: pointer;
 	margin: 0px;
 	padding: 8px;
-	background-color: black;
+	background-color: white;
 	box-sizing: border-box;
-	opacity: 0.4;
+	opacity: 0;
 }
 #ticktimer {
 	color: white;
