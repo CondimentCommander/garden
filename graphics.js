@@ -164,6 +164,8 @@ var Graphics = {
 	},
 	initial: () => {
 		Graphics.defineElements();
+		Graphics.ctx.imageSmoothingEnabled = false;
+		Graphics.ov.imageSmoothingEnabled = false;
 		for (let i = 0; i < 11; i++) {
 			Graphics.elemLayers.push({});
 		}

@@ -164,20 +164,23 @@ var Plot = {
 		}
 	},
 	changeZoom: (z) => {
+		let old = Plot.zoom;
+		let diff = old / Plot.zoom;
 		Plot.zoom = z;
 		info = Graphics.screenInfo();
 		let tiles = document.getElementsByClassName('tile_b');
 		for (let i = 0; i < tiles.length; i++) {
+			let x = tiles[i].cellIndex;
+			let y = tiles[i].parentElement.rowIndex;
 			tiles[i].style.padding = info.ts / 2 + 'px';
-			//tiles[i].style.height = Plot.zoom / 16 + 'px';
 		}
+		Graphics.setPos(Plot.tb, Plot.pos.x / info.ps * info.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / info.ps * info.ts + 8);
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 		for (let i = 0; i < Plot.height; i++) {
 			Plot.tiles[i].forEach((t) => {
-				//t.plant.inh.growth.stages
 				console.log('rp');
+				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(t.x, t.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32 }));
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], t.x, t.y));
-				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(t.x * info.ps + Plot.pos.x, t.y * info.ps + Plot.pos.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32 }));
 			});
 		}
 	},
