@@ -7,6 +7,10 @@ function lockValue(v, min, max) {
 	return v;
 }
 
+function snapValue(v, snap) {
+	return Math.round(v / snap - 0.5) * snap;
+}
+
 var Game = {
 	clickTile: (ev) => {
 		//console.log(ev.srcElement.cellIndex, ev.srcElement.parentElement.rowIndex);
@@ -29,12 +33,28 @@ var Game = {
 		//Graphics.elems[tile.sprite].op = 1;
 		//Graphics.elems[tile.plant.sprite].op = Graphics.elems[tile.plant.sprite].optemp;
 	},
+	getTilePos: (x, y) => {
+		i = Graphics.screenInfo();
+		let xa = x * (i.ss / 512);
+		let ya = y * (i.ss / 512);
+		let plotx = Plot.pos.x / 32 * i.ts * 2;
+		let ploty = Plot.pos.y / 32 * i.ts * 2;
+		let outx = Math.abs(Math.round((xa - plotx) / (i.ts * 2)));
+		let outy = Math.abs(Math.round((ya - ploty) / (i.ts * 2)));
+		if (outx >= Plot.width || outy >= Plot.height || outx < 0 || outy < 0) return false;
+		return [outx, outy];
+	},
 	mouseDown: false,
 	panStartX: 0,
 	panStartY: 0,
 	plotX: 0,
 	plotY: 0,
 	panStart: (event) => {
+		if (event.button != 2) {
+			let pos = Game.getTilePos(event.offsetX, event.offsetY));
+			if (pos = false) return;
+			return;
+		}
 		Game.mouseDown = true;
 		Game.panStartX = event.offsetX;
 		Game.panStartY = event.offsetY;
@@ -47,7 +67,7 @@ var Game = {
 	panMove: (event) => {
 		if (Game.mouseDown) {
 			let margin = document.getElementById('farmview').getBoundingClientRect().left;
-			let moveX = (event.offsetX - Game.panStartX) - margin;
+			let moveX = ((event.offsetX - Game.panStartX) - margin);
 			let moveY = (event.offsetY - Game.panStartY);
 			let calcX = Game.plotX + moveX;
 			let calcY = Game.plotY + moveY;
@@ -62,6 +82,11 @@ var Game = {
 			calcY = Math.round(calcY / ts - 0.5) * ts + 8;
 			Graphics.setPos(Plot.tb, calcX, calcY);
 			Plot.move();
+		} else {
+			let pos = Game.getTilePos(event.offsetX, event.offsetY));
+			if (pos = false) return;
+			let tiles = Plot.tb.rows;
+			let tile = tiles.item(pos[0]).cells.item(pos[1]);
 		}
 	},
 	Plant: class {
