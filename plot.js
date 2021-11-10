@@ -178,13 +178,13 @@ var Plot = {
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 		for (let i = 0; i < Plot.height; i++) {
 			Plot.tiles[i].forEach((t) => {
-				console.log('rp');
 				let x = (t.x - Plot.pos.x) / 2 + Plot.pos.x;
 				let y = (t.y - Plot.pos.y) / 2 + Plot.pos.y;
 				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32 }));
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], x, y));
 			});
 		}
+		Plot.move();
 	},
 	renderUpdate: () => {
 		for (let i = 0; i < Plot.height; i++) {
