@@ -4,6 +4,7 @@ Game.panStartY = 0;
 Game.plotX = 0;
 Game.plotY = 0;
 Game.hovered = [];
+Game.scroll = 0;
 Game.getTilePos = (x, y) => {
 	i = Graphics.screenInfo();
 	//let xa = x * (i.ss / 512);
@@ -20,7 +21,7 @@ Game.getTilePos = (x, y) => {
 Game.panStart = (event) => {
 	if (event.button != 2) {
 		let pos = Game.getTilePos(event.offsetX, event.offsetY);
-		if (pos = false) return;
+		if (!pos) return;
 		return;
 	}
 	Game.mouseDown = true;
@@ -53,18 +54,41 @@ Game.panMove = (event) => {
 	} else {
 		let pos = Game.getTilePos(event.offsetX, event.offsetY);
 		let tiles = Plot.tb.rows;
-		if (pos == false) {
-			if (Game.hovered != []) tiles.item(Game.hovered[1]).cells.item(Game.hovered[0]).style.opacity = 0;
+		if (!pos) {
+			tiles.item(Game.hovered[1]).cells.item(Game.hovered[0]).style.opacity = 0;
+			if (Game.hovered.length != 0) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], Game.hovered[1], Game.hovered[0]);
 			Game.hovered = [];
 			return;
 		}
 		let tile = tiles.item(pos[1]).cells.item(pos[0]);
-		if (Game.hovered == pos && Game.hovered[0] != undefined) {
+		if (Game.hovered == pos) {
 			return;
 		} else {
 			tiles.item(Game.hovered[1]).cells.item(Game.hovered[0]).style.opacity = 0;
+			if (Game.hovered.length != 0 && Game.hovered != pos) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], Game.hovered[1], Game.hovered[0]);
 			Game.hovered = pos;
+			Game.heldTool.events.hov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], Game.hovered[1], Game.hovered[0]);
 			tile.style.opacity = 0.14;
 		}
 	}
+};
+Game.zoom = (event) => {
+	if (Game.scroll + event.deltaY >= -400 && Game.scroll + event.deltaY <= 400) Game.scroll += event.deltaY;
+	if (Game.scroll >= 200) {
+		if (Plot.zoom == 32) return;
+		Plot.changeZoom(32);
+	} else {
+		if (Game.scroll <= -200) {
+			if (Plot.zoom == 128) return;
+			Plot.changeZoom(128);
+		} else {
+			if (Plot.zoom == 64) return;
+			Plot.changeZoom(64);
+		}
+	}
+};
+Game.clickPlot = (event) => {
+	let pos = Game.getTilePos(event.offsetX, event.offsetY);
+	if (!pos) return;
+	
 };

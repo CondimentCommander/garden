@@ -7,6 +7,7 @@
 	<script src="index.js"></script>
 	<script src="input.js"></script>
 	<script src="util.js"></script>
+	<script src="growth.js"></script>
 	
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +15,7 @@
 </head>
 <body onload="start();" onresize="Plot.changeZoom(Plot.zoom);">
 	<canvas class="canvas" id="overlay" width="2048" height="1024"></canvas>
-	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" oncontextmenu="return false">
+	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
 		<div id="plot">
 			<table id="plott">
 			
@@ -22,6 +23,9 @@
 		</div>
 		<canvas class="canvas" id="can" width="512" height="512"></canvas>
 		<div id="ticktimer"></div>
+		<div id="toolbar">
+		
+		</div>
 	</div>
 	<div class="section" id="seeds" onmouseup="Game.panStop(event)">
 		
