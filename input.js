@@ -34,6 +34,7 @@ Game.panStop = (event) => {
 	Game.mouseDown = false;
 };
 Game.panMove = (event) => {
+	Game.heldTool.events.move(event.offsetX, event.offsetY);
 	if (Game.mouseDown) {
 		let margin = document.getElementById('farmview').getBoundingClientRect().left;
 		let moveX = ((event.offsetX - Game.panStartX) - margin);
@@ -56,7 +57,7 @@ Game.panMove = (event) => {
 		let tiles = Plot.tb.rows;
 		if (!pos) {
 			tiles.item(Game.hovered[1]).cells.item(Game.hovered[0]).style.opacity = 0;
-			if (Game.hovered.length != 0) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], Game.hovered[1], Game.hovered[0]);
+			if (Game.hovered.length != 0) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
 			Game.hovered = [];
 			return;
 		}
@@ -64,10 +65,12 @@ Game.panMove = (event) => {
 		if (Game.hovered == pos) {
 			return;
 		} else {
+			console.log(Game.hovered, pos);
 			tiles.item(Game.hovered[1]).cells.item(Game.hovered[0]).style.opacity = 0;
-			if (Game.hovered.length != 0 && Game.hovered != pos) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], Game.hovered[1], Game.hovered[0]);
+			if (Game.hovered.length != 0 && Game.hovered != pos) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
+			//Game.heldTool.events.chhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
 			Game.hovered = pos;
-			Game.heldTool.events.hov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], Game.hovered[1], Game.hovered[0]);
+			Game.heldTool.events.hov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
 			tile.style.opacity = 0.14;
 		}
 	}

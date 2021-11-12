@@ -6,6 +6,7 @@ var Graphics = {
 			this.lr = data.viewLayer;
 			if (this.lr == undefined) this.lr = 5;
 			this.op = data.opacity;
+			if (this.op == undefined) this.op = 1.0;
 			this.data = data;
 			this.id = 0;
 			this.canvas = this.renderInfo();
@@ -126,6 +127,27 @@ var Graphics = {
 				}
 			}
 		}
+		Graphics.TextElement = class extends Graphics.ScreenElement {
+			constructor(x = 0, y = 0, data = {t: '', s: 12, f: 'Rubik', st: false, fill: 'black', opacity: 1.0, viewLayer: 5}) {
+				super(x, y, data);
+				this.text = data.t;
+				this.size = data.s;
+				this.font = data.f;
+				this.stroke = data.st;
+				this.fill = data.fill;
+			}
+			draw() {
+				this.predraw();
+				this.canvas.font = this.size + 'pt ' + this.font;
+				if (this.st) {
+					this.canvas.strokeStyle = this.fill;
+					this.canvas.strokeText(this.text, this.pos.x, this.pos.y);
+				} else {
+					this.canvas.fillStyle = this.fill;
+					this.canvas.fillText(this.text, this.pos.x, this.pos.y);
+				}
+			}
+		}
 		Graphics.fromData = function (dt, x, y) {
 			let sprite = new Graphics.SpriteElement(x, y, dt)
 			if (dt.ft != undefined) sprite = new Graphics.AnimatedSpriteElement(x, y, dt);
@@ -172,6 +194,7 @@ var Graphics = {
 		//Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
 		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
 		Graphics.bg = new Graphics.PatternElement(0, 0, { img: 'images/bg.png', w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
+		//text = new Graphics.TextElement(32, 32, { t: 'Hello World!', s: 20, f: 'Rubik', st: false, fill: 'black' }).add();
 		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
 	},
 	update: () => {

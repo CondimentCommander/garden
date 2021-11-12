@@ -46,14 +46,6 @@ var Game = {
 			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', sa: 2, opacity: 0, viewLayer: 3 }]}).setinh(),
 			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 3, decay: 1, stages: [{ img: 'images/sprites1.png', sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 }, { img: 'images/sprites1.png', sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, { img: 'images/sprites1.png', sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }]}).setinh(),
 		];
-		Game.tools = [
-			new Game.Tool('Inspect', 'View plant information', 'images/lime/2.png', {hov: (tile, x, y) => {
-				console.log(tile.plant.plant.name);
-			}, unhov: (tile, x, y) => {
-				console.log('unhov');
-			}})
-		];
-		Game.heldTool = Game.tools[0];
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 	},
 	dev: {
@@ -84,6 +76,8 @@ function start() {
 	Graphics.time = Plot.cycletime / 1000;
 	Plot.tick();
 	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
+	
+	Game.heldTool.events.init();
 	
 	console.log('Loaded!');
 }
