@@ -1,16 +1,21 @@
 Game.tools = [
 	new Game.Tool('Inspect', 'View plant information', 'images/lime/2.png', {hov: (tile, x, y) => {
-		
+		//console.log('hov');
+		Graphics.elems[Game.heldTool.text].op = 1;
 	}, unhov: (tile, x, y) => {
-		console.log('he');
+		//console.log('unhov');
 		Graphics.elems[Game.heldTool.text].op = 0;
 	}, chhov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name;
-	}, move: (tile, x, y) => {
+		//console.log('chhov');
+		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name + '\n' + tile.plant.grows;
+		//Graphics.elems[Game.heldTool.text].pos = {x: x - Plot.zoom, y: y - Plot.zoom};
+	}, move: (x, y) => {
 		if (Game.heldTool.text == undefined) return;
-		Graphics.elems[Game.heldTool.text].pos = {x: x, y: y};
+		//console.log('move');
+		let inf = Graphics.screenInfo();
+		Graphics.elems[Game.heldTool.text].pos = {x: (x + inf.mr + 8) * inf.od / inf.oa, y: y};
 	}, init: () => {
-		Game.heldTool.text = new Graphics.TextElement(0, 0, {t: '', s: 7, f: 'Rubik', st: false, fill: 'white'}).add();
+		Game.heldTool.text = new Graphics.TextElement(0, 0, {t: '', s: 15, f: 'Rubik', st: false, fill: 'white', viewLayer: 6 }).add();
 	}})
 ];
 Game.heldTool = Game.tools[0];

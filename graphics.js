@@ -163,11 +163,15 @@ var Graphics = {
 		let pixelsize = Plot.zoom / 2;
 		let screensize = Plot.farm.clientWidth;
 		let tilesize = screensize / (512 / pixelsize);
-		return {ts: tilesize, ps: pixelsize, ss: screensize};
+		let margin = document.getElementById('farmview').getBoundingClientRect().left;
+		let ovAspect = Graphics.overlay.clientHeight / Graphics.overlay.clientWidth;
+		let dotsize = tilesize / 16;
+		let ovdot = Graphics.overlay.clientWidth / 2048;
+		return {ts: tilesize, ps: pixelsize, ss: screensize, mr: margin, oa: ovAspect, ds: dotsize, od: ovdot};
 	},
 	refresh: () => {
 		Graphics.ctx.clearRect(0, 0, 512, 512);
-		Graphics.ov.clearRect(0, 0, 1280, 720);
+		Graphics.ov.clearRect(0, 0, 2048, 1024);
 	},
 	elems: {},
 	elemLayers: [],
@@ -187,7 +191,7 @@ var Graphics = {
 	initial: () => {
 		Graphics.defineElements();
 		Graphics.ctx.imageSmoothingEnabled = false;
-		Graphics.ov.imageSmoothingEnabled = false;
+		//Graphics.ov.imageSmoothingEnabled = false;
 		for (let i = 0; i < 11; i++) {
 			Graphics.elemLayers.push({});
 		}
