@@ -20,3 +20,6 @@ function compareArrays(a1, a2) {
 	}
 	return true;
 }
+function say(event) {
+	//console.log(event.clientX - Graphics.screenInfo().mr - 8, event.clientY - 8);
+}

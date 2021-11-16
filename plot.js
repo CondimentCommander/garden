@@ -1,7 +1,7 @@
 var Plot = {
 	tiles: [],
-	width: 8,
-	height: 6,
+	width: 3,
+	height: 3,
 	pos: { x: 0, y: 0 },
 	zoom: 64,
 	generate: () => {

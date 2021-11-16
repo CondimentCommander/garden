@@ -14,7 +14,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap" rel="stylesheet">
 </head>
-<body onload="start();" onresize="Plot.changeZoom(Plot.zoom);">
+<body onload="start();" onresize="Plot.changeZoom(Plot.zoom);" onmousemove="say(event)">
 	<canvas class="canvas" id="overlay" width="2048" height="1024"></canvas>
 	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
 		<div id="plot">

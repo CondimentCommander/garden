@@ -20,8 +20,9 @@ Game.getTilePos = (x, y) => {
 };
 Game.panStart = (event) => {
 	if (event.button != 2) {
-		let pos = Game.getTilePos(event.offsetX, event.offsetY);
-		if (!pos) return;
+		Game.clickPlot(event);
+		//let pos = Game.getTilePos(event.offsetX, event.offsetY);
+		//if (!pos) return;
 		return;
 	}
 	Game.mouseDown = true;
@@ -92,7 +93,8 @@ Game.zoom = (event) => {
 	}
 };
 Game.clickPlot = (event) => {
+	console.log('hi');
 	let pos = Game.getTilePos(event.offsetX, event.offsetY);
 	if (!pos) return;
-	
+	Plot.plant(Plot.tiles[pos[1]][pos[0]], Game.plants[0]);
 };

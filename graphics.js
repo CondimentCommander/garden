@@ -164,10 +164,10 @@ var Graphics = {
 		let screensize = Plot.farm.clientWidth;
 		let tilesize = screensize / (512 / pixelsize);
 		let margin = document.getElementById('farmview').getBoundingClientRect().left;
-		let ovAspect = Graphics.overlay.clientHeight / Graphics.overlay.clientWidth;
-		let dotsize = tilesize / 16;
-		let ovdot = Graphics.overlay.clientWidth / 2048;
-		return {ts: tilesize, ps: pixelsize, ss: screensize, mr: margin, oa: ovAspect, ds: dotsize, od: ovdot};
+		let ovAspect = Graphics.overlay.clientWidth / Graphics.overlay.clientHeight;
+		let ovx = Graphics.overlay.clientWidth / 2048;
+		let ovy = Graphics.overlay.clientHeight / 1024;
+		return { ts: tilesize, ps: pixelsize, ss: screensize, mr: margin, oa: ovAspect, ox: ovx, oy: ovy };
 	},
 	refresh: () => {
 		Graphics.ctx.clearRect(0, 0, 512, 512);
@@ -183,6 +183,22 @@ var Graphics = {
 				}
 			}
 		}
+	},
+	ovPattern: () => {
+		for (let i = 0; i < 2048; i+=16) {
+			for (let j = 0; j < 1024; j+=16) {
+				if (i % 32 == 0 && j % 32 == 0) {
+					Graphics.ov.fillStyle = 'green';
+					Graphics.ov.fillRect(i, j, 16, 16);
+				}
+			}
+		}
+	},
+	convert: (x, y) => {
+		let i = Graphics.screenInfo();
+		let xa = (x + i.mr + 8) / i.ox;
+		let ya = (y + 8) / i.oy;
+		return [xa, ya];
 	},
 	timer: () => {
 		Graphics.time--;
@@ -203,6 +219,7 @@ var Graphics = {
 	},
 	update: () => {
 		Graphics.refresh();
+		//Graphics.ovPattern();
 		for (let i = 0; i < 11; i++) {
 			Object.values(Graphics.elemLayers[i]).forEach((element) => {
 				element.draw();
