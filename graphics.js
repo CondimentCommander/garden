@@ -1,12 +1,14 @@
 var Graphics = {
 	frameRate: 30,
 	ScreenElement: class {
-		constructor(x, y, data = { viewLayer: 5, opacity: 1.0 }) {
+		constructor(x, y, data = { viewLayer: 5, opacity: 1.0, rot: 0 }) {
 			this.pos = {x: x, y: y};
 			this.lr = data.viewLayer;
 			if (this.lr == undefined) this.lr = 5;
 			this.op = data.opacity;
 			if (this.op == undefined) this.op = 1.0;
+			this.rot = data.rot;
+			if (this.rot == undefined) this.rot = 0;
 			this.data = data;
 			this.id = 0;
 			this.canvas = this.renderInfo();
@@ -41,8 +43,9 @@ var Graphics = {
 			if (this.lr > 5) return Graphics.ov;
 			if (this.lr <= 5) return Graphics.ctx;
 		}
-		predraw() { //for general actions done before drawing an element
-			this.canvas.globalAlpha = this.op; //used to set opacity of the element
+		predraw() {
+			this.canvas.globalAlpha = this.op;
+			this.canvas.rotate(this.rot * Math.PI / 180);
 		}
 		prop() { //updates the current value of the element in the element list to be in the layer
 			Graphics.elemLayers[this.lr][this.id] = this;
@@ -50,7 +53,6 @@ var Graphics = {
 		replace(rp) {
 			rp.id = this.id;
 			Graphics.elemLayers[this.lr][rp.id] = rp;
-			//Graphics.elemLayers[this.lr][rp.id].id = rp.id;
 			Graphics.elems[rp.id] = rp;
 		}
 		replaceData(dt) {

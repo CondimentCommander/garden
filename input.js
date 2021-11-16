@@ -44,10 +44,19 @@ Game.panMove = (event) => {
 		let calcY = Game.plotY + moveY;
 		let ts = Graphics.screenInfo().ts;
 		let ss = Graphics.screenInfo().ss;
-		if (calcX < 8) calcX = 8;
-		if (calcX > ss - Plot.width * ts) calcX = ss - Plot.width * ts + 8;
-		if (calcY < 8) calcY = 8;
-		if (calcY > ss - Plot.height * ts) calcY = ss - Plot.height * ts + 8;
+		
+		if (calcX < 8 - Plot.width * ts) calcX = 8 - Plot.width * ts;
+		if (calcX > ss) calcX = ss + 8;
+		if (calcY < 8 - Plot.height * ts) calcY = 8 - Plot.height * ts;
+		if (calcY > ss) calcY = ss + 8;
+		
+		Plot.farm.style.borderColor = 'black';
+		
+		if (calcX < 8) Plot.farm.style.borderLeftColor = 'blue';
+		if (calcX > ss - Plot.width * ts) Plot.farm.style.borderRightColor = 'blue';
+		if (calcY < 8) Plot.farm.style.borderTopColor = 'blue';
+		if (calcY > ss - Plot.height * ts) Plot.farm.style.borderBottomColor = 'blue';
+		
 		Plot.pos = { x: Math.round(calcX / ts - 0.5) * (Plot.zoom / 2), y: Math.round(calcY / ts - 0.5) * (Plot.zoom / 2)};
 		calcX = Math.round(calcX / ts - 0.5) * ts + 8 + margin + 0.5;
 		calcY = Math.round(calcY / ts - 0.5) * ts + 8;
@@ -78,12 +87,12 @@ Game.panMove = (event) => {
 	}
 };
 Game.zoom = (event) => {
-	if (Game.scroll + event.deltaY >= -400 && Game.scroll + event.deltaY <= 400) Game.scroll += event.deltaY;
-	if (Game.scroll >= 200) {
+	if (Game.scroll + event.deltaY >= -200 && Game.scroll + event.deltaY <= 200) Game.scroll += event.deltaY;
+	if (Game.scroll >= 100) {
 		if (Plot.zoom == 32) return;
 		Plot.changeZoom(32);
 	} else {
-		if (Game.scroll <= -200) {
+		if (Game.scroll <= -100) {
 			if (Plot.zoom == 128) return;
 			Plot.changeZoom(128);
 		} else {

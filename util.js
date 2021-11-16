@@ -23,3 +23,8 @@ function compareArrays(a1, a2) {
 function say(event) {
 	//console.log(event.clientX - Graphics.screenInfo().mr - 8, event.clientY - 8);
 }
+
+function randRot() {
+	let r = Math.random() * 360;
+	return snapValue(r, 90);
+}

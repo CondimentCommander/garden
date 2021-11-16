@@ -1,4 +1,4 @@
-Plot.cycletime = 5000;
+Plot.cycletime = 10000;
 Plot.execute = (func) => {
 	for (let i = 0; i < Plot.height; i++) {
 		for (let j = 0; j < Plot.width; j++) {
