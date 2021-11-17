@@ -27,8 +27,8 @@ Plot.grow = (tile) => {
 	let length = plant.inh.growth.stages.length - 1;
 	if (plant.stage == 0) {
 		plant.stagetime++;
-		let chance = plant.inh.growth.speed * 0.014 * Game.dev.fertilizer;
-		let dbchance = plant.inh.growth.speed * 0.003 * Game.dev.fertilizer;
+		let chance = plant.inh.growth.speed * 0.028 * Game.dev.fertilizer;
+		let dbchance = plant.inh.growth.speed * 0.006 * Game.dev.fertilizer;
 		let rand = Math.random();
 		if (rand <= chance) {
 			if (rand <= dbchance) plant.grows += 2;
@@ -52,9 +52,9 @@ Plot.grow = (tile) => {
 		} else {
 			if (plant.stage == 2) {
 				plant.stagetime++;
-				let chance = plant.inh.growth.speed * 0.026 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2) * Game.dev.fertillizer;
+				let chance = plant.inh.growth.speed * 0.036 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2) * Game.dev.fertillizer;
 				let rand = Math.random();
-				Graphics.elems[plant.sprite].op = lockValue(1 - chance * 4);
+				Graphics.elems[plant.sprite].op = lockValue(1 - chance * 4, 0, 1);
 				if (rand <= chance) Plot.decay(tile);
 			}
 		}
@@ -62,7 +62,7 @@ Plot.grow = (tile) => {
 };
 Plot.growWeed = (tile) => {
 	let plant = tile.plant;
-	let chance = 0.012 * Game.dev.fertilizer;
+	let chance = 0.024 * Game.dev.fertilizer;
 	let rand = Math.random();
 	if (rand <= chance) {
 		Plot.plant(tile, Game.plants[2]);

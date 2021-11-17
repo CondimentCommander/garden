@@ -36,6 +36,7 @@
 	font-size: 34pt;
 	z-index: 2;
 	position: absolute;
+	margin-left: 8px;
 }
 #farmview {
 	width: 100vh;

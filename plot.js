@@ -1,7 +1,7 @@
 var Plot = {
 	tiles: [],
-	width: 16,
-	height: 16,
+	width: 5,
+	height: 5,
 	pos: { x: 0, y: 0 },
 	zoom: 64,
 	generate: () => {
@@ -58,7 +58,7 @@ var Plot = {
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
 				let r = randRot();
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32 }).add();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32, rot: r }).add();
 			}
 		}
 	},
@@ -74,7 +74,6 @@ var Plot = {
 				tile.y = sprite.pos.y;
 				sprite.prop();
 				sprite = Graphics.elems[tile.plant.sprite];
-				//console.log(sprite);
 				sprite.pos.x = tile.x;
 				sprite.pos.y = tile.y;
 				sprite.prop();
@@ -106,7 +105,7 @@ var Plot = {
 				let x = (t.x - Plot.pos.x) / 2 + Plot.pos.x;
 				let y = (t.y - Plot.pos.y) / 2 + Plot.pos.y;
 				let r = randRot();
-				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32 }));
+				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: 'images/sprites1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32, rot: Graphics.elems[t.sprite].rot }));
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], x, y));
 			});
 		}

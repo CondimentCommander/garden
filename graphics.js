@@ -76,7 +76,10 @@ var Graphics = {
 				this.slicescale = data.sls;
 			}
 			draw() {
+				this.canvas.resetTransform();
+				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
+				this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
 				if (this.ready) {
 					if (this.slicex == undefined) {
 						this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
@@ -96,7 +99,11 @@ var Graphics = {
 				this.calcframe = 0; //the frame of the image to use, that respects the frame hold time
 			}
 			draw() {
+				this.canvas.resetTransform();
+				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
+				this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
+				
 				this.calcframe = Math.ceil((this.frame + 1) / this.frametime) - 1;
 				let size = this.image.width / this.rc;
 				let calcrow = Math.floor(this.calcframe / this.rc) * size;
@@ -120,7 +127,11 @@ var Graphics = {
 				this.height = data.h;
 			}
 			draw() {
+				this.canvas.resetTransform();
+				this.canvas.translate(this.pos.x + this.image.width / 2, this.pos.y + this.image.height / 2);
 				this.predraw();
+				this.canvas.translate(-this.pos.x - this.image.width / 2, -this.pos.y - this.image.height / 2);
+				
 				if (this.ready) {
 					this.pat = this.canvas.createPattern(this.image, 'repeat');
 					this.canvas.rect(this.pos.x, this.pos.y, this.width, this.height);
@@ -139,7 +150,10 @@ var Graphics = {
 				this.fill = data.fill;
 			}
 			draw() {
+				this.canvas.resetTransform();
+				this.canvas.translate(this.pos.x + this.size / 2, this.pos.y + this.size / 2);
 				this.predraw();
+				this.canvas.translate(-this.pos.x - this.size / 2, -this.pos.y - this.size / 2);
 				this.canvas.font = this.size + 'pt ' + this.font;
 				if (this.st) {
 					this.canvas.strokeStyle = this.fill;

@@ -49,7 +49,7 @@ var Game = {
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 	},
 	dev: {
-		fertilizer: 2
+		fertilizer: 1
 	}
 };
 
