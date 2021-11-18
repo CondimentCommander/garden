@@ -91,7 +91,7 @@ var Plot = {
 		let old = Plot.zoom;
 		let diff = old / Plot.zoom;
 		Plot.zoom = z;
-		info = Graphics.screenInfo();
+		let info = Graphics.screenInfo();
 		let tiles = document.getElementsByClassName('tile_b');
 		for (let i = 0; i < tiles.length; i++) {
 			let x = tiles[i].cellIndex;
@@ -109,6 +109,9 @@ var Plot = {
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], x, y));
 			});
 		}
+		info = Graphics.screenInfo();
+		//Plot.pos.x -= lockValue(Game.appMousePos[0] - Plot.pos.x, info.ts);
+		//Plot.pos.y -= lockValue(Game.appMousePos[1] - Plot.pos.y, info.ts);
 		Plot.move();
 	},
 	renderUpdate: () => {

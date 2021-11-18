@@ -5,6 +5,7 @@ Game.plotX = 0;
 Game.plotY = 0;
 Game.hovered = [];
 Game.scroll = 0;
+Game.appMousePos = [];
 Game.getTilePos = (x, y) => {
 	i = Graphics.screenInfo();
 	//let xa = x * (i.ss / 512);
@@ -36,6 +37,7 @@ Game.panStop = (event) => {
 };
 Game.panMove = (event) => {
 	Game.heldTool.events.move(event.offsetX, event.offsetY);
+	Game.appMousePos = [event.offsetX, event.offsetY];
 	if (Game.mouseDown) {
 		let margin = document.getElementById('farmview').getBoundingClientRect().left;
 		let moveX = ((event.offsetX - Game.panStartX) - margin);
@@ -102,8 +104,7 @@ Game.zoom = (event) => {
 	}
 };
 Game.clickPlot = (event) => {
-	console.log('hi');
 	let pos = Game.getTilePos(event.offsetX, event.offsetY);
 	if (!pos) return;
-	Plot.plant(Plot.tiles[pos[1]][pos[0]], Game.plants[0]);
+	Game.heldTool.events.click(Plot.tiles[pos[1]][pos[0]], event.offsetX, event.offsetY);
 };

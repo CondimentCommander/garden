@@ -22,6 +22,20 @@
 	z-index: 3;
 	pointer-events: none;
 }
+#toolbar {
+	z-index: 3;
+	position: absolute;
+}
+.toolbar_button {
+	border-style: solid;
+	border-width: 4px;
+	border-radius: 12px;
+	border-left-style: none;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	background-color: yellow;
+	image-rendering: pixelated;
+}
 .tile_b {
 	cursor: pointer;
 	margin: 0px;
@@ -36,6 +50,9 @@
 	font-size: 34pt;
 	z-index: 2;
 	position: absolute;
+	float: right;
+	bottom: 10px;
+	right: 10px;
 	margin-left: 8px;
 }
 #farmview {

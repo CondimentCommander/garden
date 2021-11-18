@@ -8,7 +8,7 @@ var Game = {
 			this.id = id;
 			this.dn = displayName;
 			this.growth = {};
-			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}};
+			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}, harvest: (tile) => {Plot.plant(tile, Game.plants[1])}};
 			this.inh = {};
 		}
 		setinh() {
@@ -38,12 +38,18 @@ var Game = {
 			this.desc = desc;
 			this.icon = icon;
 			this.events = events;
+			if (this.events.click == undefined) this.events.click = () => {};
+			if (this.events.hov == undefined) this.events.hov = () => {};
+			if (this.events.unhov == undefined) this.events.unhov = () => {};
+			if (this.events.chhov == undefined) this.events.chhov = () => {};
+			if (this.events.move == undefined) this.events.move = () => {};
+			if (this.events.init == undefined) this.events.init = () => {};
 		}
 	},
 	init: () => {
 		Game.plants = [
 			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: 'images/lime/2.png', sa: 2, opacity: 1, viewLayer: 3 }, { img: 'images/lime/1.png', s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }]}).setinh(),
-			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', sa: 2, opacity: 0, viewLayer: 3 }]}).setinh(),
+			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: 'images/grassbad.png', sa: 2, opacity: 0, viewLayer: 3 }]}).addEvent('harvest', (tile) => {}).setinh(),
 			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 3, decay: 1, stages: [{ img: 'images/sprites1.png', sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 }, { img: 'images/sprites1.png', sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, { img: 'images/sprites1.png', sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }]}).setinh(),
 		];
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
