@@ -1,0 +1,22 @@
+.panel {
+	background-color: yellow;
+}
+.float_panel {
+	background-color: yellow;
+	border-style: solid;
+	border-color: black;
+	border-radius: 16px;
+	z-index: 5;
+}
+.float_panel[data-fill='main'] {
+	width: 80vw;
+	height: 80vh;
+}
+.float_panel[data-fill='main'] #dim {
+	opacity: 0.3
+}
+#dim {
+	background-color: black;
+	z-index: 4;
+	opacity: 0;
+}

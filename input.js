@@ -6,6 +6,7 @@ Game.plotY = 0;
 Game.hovered = [];
 Game.scroll = 0;
 Game.appMousePos = [];
+Game.focused = false;
 Game.getTilePos = (x, y) => {
 	i = Graphics.screenInfo();
 	//let xa = x * (i.ss / 512);
@@ -37,9 +38,13 @@ Game.panStop = (event) => {
 };
 Game.panMove = (event) => {
 	Game.heldTool.events.move(event.offsetX, event.offsetY);
+	Game.focused = document.elementFromPoint(event.clientX, event.clientY) == Graphics.canvas;
 	Game.appMousePos = [event.offsetX, event.offsetY];
+	//console.log(Game.focused);
+	//console.log(document.elementFromPoint(event.clientX, event.clientY).clientHeight);
+	//if (!Game.focused) Game.appMousePos[1] -= document.elementFromPoint(event.clientX, event.clientY).clientHeight;
 	if (Game.mouseDown) {
-		let margin = document.getElementById('farmview').getBoundingClientRect().left;
+		let margin = Plot.farm.getBoundingClientRect().left;
 		let moveX = ((event.offsetX - Game.panStartX) - margin);
 		let moveY = (event.offsetY - Game.panStartY);
 		let calcX = Game.plotX + moveX;
@@ -104,6 +109,11 @@ Game.zoom = (event) => {
 	}
 };
 Game.clickPlot = (event) => {
+	if (!Game.focused) {
+		//console.log('gar2');
+		//eval(document.elementFromPoint(event.clientX, event.clientY).dataset.click);
+		//return;
+	}
 	let pos = Game.getTilePos(event.offsetX, event.offsetY);
 	if (!pos) return;
 	Game.heldTool.events.click(Plot.tiles[pos[1]][pos[0]], event.offsetX, event.offsetY);
