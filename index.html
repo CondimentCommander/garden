@@ -19,8 +19,8 @@
 </head>
 <body onload="start();" onresize="Plot.changeZoom(Plot.zoom);" onmousemove="say(event)">
 	<canvas class="canvas" id="overlay" width="2048" height="1024"></canvas>
-	<div class="float_panel panel" data-fill="main"></div>
-	<div id="dim"></div>
+	<div class="float_panel panel" id="test" data-fill="main"></div>
+	<div id="dim" onclick="Interface.closeFloat(Interface.activeFloat)"></div>
 	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
 		<div id="plot">
 			<table id="plott">

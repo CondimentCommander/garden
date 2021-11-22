@@ -6,17 +6,22 @@
 	border-style: solid;
 	border-color: black;
 	border-radius: 16px;
-	z-index: 5;
+	display: none;
+	z-index: 6;
 }
 .float_panel[data-fill='main'] {
 	width: 80vw;
 	height: 80vh;
-}
-.float_panel[data-fill='main'] #dim {
-	opacity: 0.3
+	position: absolute;
+	left: 10vw;
+	top: 10vh;
 }
 #dim {
 	background-color: black;
-	z-index: 4;
+	z-index: 5;
 	opacity: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	pointer-events: none;
 }

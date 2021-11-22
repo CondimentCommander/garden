@@ -1,5 +1,17 @@
 var Graphics = {
 	frameRate: 30,
+	Resource: class {
+		constructor(id, src) {
+			this.id = id;
+			this.src = src;
+			this.img = new Image();
+			this.ready = false;
+			this.img.onload = () => {
+				this.ready = true;
+			};
+			this.img.src = this.src;
+		}
+	},
 	ScreenElement: class {
 		constructor(x, y, data = { viewLayer: 5, opacity: 1.0, rot: 0 }) {
 			this.pos = {x: x, y: y};
@@ -64,12 +76,7 @@ var Graphics = {
 			constructor(x = 0, y = 0, data = { img: '', s: 1, viewLayer: 5, opacity: 1.0 }) {
 				super(x, y, data);
 				this.img = data.img; //static image to use for the sprite
-				this.image = new Image(); //image object loaded for the sprite on creation
-				this.ready = false;
-				this.image.onload = () => {
-					this.ready = true;
-				};
-				this.image.src = this.img;
+				this.image = this.img.img; //image object loaded for the sprite on creation
 				this.scale = data.s;
 				this.slicex = data.sx;
 				this.slicey = data.sy;
@@ -80,7 +87,7 @@ var Graphics = {
 				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
 				this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
-				if (this.ready) {
+				if (this.img.ready) {
 					if (this.slicex == undefined) {
 						this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
 					} else {
@@ -99,6 +106,7 @@ var Graphics = {
 				this.calcframe = 0; //the frame of the image to use, that respects the frame hold time
 			}
 			draw() {
+				if (!this.img.ready) return;
 				this.canvas.resetTransform();
 				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
@@ -117,12 +125,12 @@ var Graphics = {
 			constructor(x = 0, y = 0, data = {img: '', w: 16, h: 16, viewLayer: 5, opacity: 1.0}) {
 				super(x, y, data);
 				this.img = data.img;
-				this.image = new Image();
-				this.ready = false;
-				this.image.onload = () => {
-					this.ready = true;
-				};
-				this.image.src = this.img;
+				this.image = this.img.img;
+				//this.ready = false;
+				//this.image.onload = () => {
+					//this.ready = true;
+				//};
+				//this.image.src = this.img;
 				this.width = data.w;
 				this.height = data.h;
 			}
@@ -132,7 +140,7 @@ var Graphics = {
 				this.predraw();
 				this.canvas.translate(-this.pos.x - this.image.width / 2, -this.pos.y - this.image.height / 2);
 				
-				if (this.ready) {
+				if (this.img.ready) {
 					this.pat = this.canvas.createPattern(this.image, 'repeat');
 					this.canvas.rect(this.pos.x, this.pos.y, this.width, this.height);
 					this.canvas.fillStyle = this.pat;
@@ -223,14 +231,20 @@ var Graphics = {
 	initial: () => {
 		Graphics.defineElements();
 		Graphics.ctx.imageSmoothingEnabled = false;
-		//Graphics.ov.imageSmoothingEnabled = false;
+		Graphics.ov.imageSmoothingEnabled = false;
+		
+		Graphics.resources = {
+			'sprites1': new Graphics.Resource(1, 'images/sprites1.png'),
+			'bg': new Graphics.Resource(2, 'images/bg.png'),
+			'lime': new Graphics.Resource(3, 'images/lime/1.png'),
+			'lime2': new Graphics.Resource(4, 'images/lime/2.png'),
+			'grass': new Graphics.Resource(5, 'images/grassbad.png')
+		};
+		
 		for (let i = 0; i < 11; i++) {
 			Graphics.elemLayers.push({});
 		}
-		//Graphics.foo = new Graphics.AnimatedSpriteElement(0, 0, { img: 'images/animtest.png', count: 8, rc: 4, ft: 5, s: 12, viewLayer: 0 }).add();
-		//Graphics.bar = new Graphics.SpriteElement(100, 100, { img: 'images/grassbad.png', s: 16, opacity: 0.5, viewLayer: 0 }).add();
-		Graphics.bg = new Graphics.PatternElement(0, 0, { img: 'images/bg.png', w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
-		//text = new Graphics.TextElement(32, 32, { t: 'Hello World!', s: 20, f: 'Rubik', st: false, fill: 'black' }).add();
+		Graphics.bg = new Graphics.PatternElement(0, 0, { img: Graphics.resources['bg'], w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
 		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
 	},
 	update: () => {
