@@ -21,6 +21,9 @@
 	<canvas class="canvas" id="overlay" width="2048" height="1024"></canvas>
 	<div class="float_panel panel" id="test" data-fill="main"></div>
 	<div id="dim" onclick="Interface.closeFloat(Interface.activeFloat)"></div>
+	<div class="float_panel panel" id="welcome" data-fill="main">
+		<div class="panel_x" onclick="Interface.close(event)">X</div>
+	</div>
 	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
 		<div id="plot">
 			<table id="plott">

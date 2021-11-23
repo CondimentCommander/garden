@@ -1,5 +1,7 @@
 .panel {
 	background-color: yellow;
+	box-sizing: border-box;
+	margin: 0px;
 }
 .float_panel {
 	background-color: yellow;
@@ -15,6 +17,17 @@
 	position: absolute;
 	left: 10vw;
 	top: 10vh;
+}
+.panel_x {
+	position: absolute;
+	top: 5%;
+	right: 5%;
+	background-color: red;
+	border-style: solid;
+	border-width: 3px;
+	padding: 0.6%;
+	width: 1.8%;
+	height: 1.8%;
 }
 #dim {
 	background-color: black;

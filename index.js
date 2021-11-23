@@ -56,7 +56,8 @@ var Game = {
 		Game.inv.init();
 	},
 	dev: {
-		fertilizer: 1
+		fertilizer: 1,
+		showWelcome: false
 	}
 };
 
@@ -86,7 +87,10 @@ function start() {
 	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
 	
 	Game.heldTool.events.init();
-	
+	if (Game.dev.showWelcome) {
+		let panel = new Interface.Panel(document.getElementById('welcome'));
+		Interface.openFloat(panel);
+	}
 	console.log('Loaded!');
 }
 

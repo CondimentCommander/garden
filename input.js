@@ -112,7 +112,7 @@ Game.clickPlot = (event) => {
 	if (!Game.focused) {
 		//console.log('gar2');
 		//eval(document.elementFromPoint(event.clientX, event.clientY).dataset.click);
-		//return;
+		return;
 	}
 	let pos = Game.getTilePos(event.offsetX, event.offsetY);
 	if (!pos) return;

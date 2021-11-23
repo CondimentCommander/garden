@@ -1,5 +1,6 @@
 var Graphics = {
 	frameRate: 30,
+	filters: [],
 	Resource: class {
 		constructor(id, src) {
 			this.id = id;
@@ -26,6 +27,7 @@ var Graphics = {
 			this.canvas = this.renderInfo();
 			this.pan = data.pan;
 			this.tag = data.tag;
+			this.filcomp = "";
 		}
 		randomId() {
 			let rand = Math.floor(Math.random() * 100000);
@@ -58,6 +60,13 @@ var Graphics = {
 		predraw() {
 			this.canvas.globalAlpha = this.op;
 			this.canvas.rotate(this.rot * Math.PI / 180);
+			this.filcomp = "";
+			for (let i = 0; i < Graphics.filters.length; i++) {
+				this.filcomp = this.filcomp + Graphics.filters[i] + " ";
+			}
+			if (this.filters != undefined) this.filcomp = this.filcomp + this.filters;
+			this.filcomp = this.filcomp.trim();
+			this.canvas.filter = this.filcomp;
 		}
 		prop() { //updates the current value of the element in the element list to be in the layer
 			Graphics.elemLayers[this.lr][this.id] = this;
@@ -81,6 +90,7 @@ var Graphics = {
 				this.slicex = data.sx;
 				this.slicey = data.sy;
 				this.slicescale = data.sls;
+				this.filters = data.fil;
 			}
 			draw() {
 				this.canvas.resetTransform();
@@ -88,6 +98,7 @@ var Graphics = {
 				this.predraw();
 				this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
 				if (this.img.ready) {
+					//this.image.style.filter = this.filcomp;
 					if (this.slicex == undefined) {
 						this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
 					} else {
@@ -111,6 +122,8 @@ var Graphics = {
 				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
 				this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
+				
+				//this.image.style.filter = this.filcomp;
 				
 				this.calcframe = Math.ceil((this.frame + 1) / this.frametime) - 1;
 				let size = this.image.width / this.rc;
@@ -199,6 +212,11 @@ var Graphics = {
 	},
 	elems: {},
 	elemLayers: [],
+	addFilter: (fil, ov) => {
+		//Graphics.filters.push(fil);
+		if (!ov) Graphics.ctx.filter = fil;
+		if (ov) Graphics.ov.filter = fil;
+	},
 	testPattern: () => {
 		for (let i = 0; i < 512; i+=16) {
 			for (let j = 0; j < 512; j+=16) {
