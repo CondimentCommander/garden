@@ -21,13 +21,23 @@
 .panel_x {
 	position: absolute;
 	top: 5%;
-	right: 5%;
-	background-color: red;
-	border-style: solid;
-	border-width: 3px;
+	right: 3%;
 	padding: 0.6%;
 	width: 1.8%;
 	height: 1.8%;
+	font-weight: bold;
+	font-family: Monospace;
+	font-size: 115%;
+}
+.top {
+	position: absolute;
+	z-index: 2;
+}
+#toolcontext {
+	bottom: 15px;
+	width: 35%;
+	height: 5%;
+	left: 50vw;
 }
 #dim {
 	background-color: black;

@@ -7,6 +7,7 @@ Game.tools = [
 		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name + '\n' + tile.plant.grows;
 	}, move: (x, y) => {
 		if (Game.heldTool.text == undefined) return;
+		//if (!Game.focused) Graphics.elems[Game.heldTool.text].op = 0;
 		let inf = Graphics.screenInfo();
 		let con = Graphics.convert(x, y);
 		Graphics.elems[Game.heldTool.text].pos = {x: con[0], y: con[1]};

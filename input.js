@@ -41,7 +41,7 @@ Game.panMove = (event) => {
 	Game.focused = document.elementFromPoint(event.clientX, event.clientY) == Graphics.canvas;
 	Game.appMousePos = [event.offsetX, event.offsetY];
 	//console.log(Game.focused);
-	//console.log(document.elementFromPoint(event.clientX, event.clientY).clientHeight);
+	//console.log(event.offsetX - document.elementFromPoint(event.clientX, event.clientY).clientHeight);
 	//if (!Game.focused) Game.appMousePos[1] -= document.elementFromPoint(event.clientX, event.clientY).clientHeight;
 	if (Game.mouseDown) {
 		let margin = Plot.farm.getBoundingClientRect().left;
