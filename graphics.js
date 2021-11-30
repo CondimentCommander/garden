@@ -171,11 +171,13 @@ var Graphics = {
 				this.fill = data.fill;
 			}
 			draw() {
+				let oa = Graphics.screenInfo().oa;
 				this.canvas.resetTransform();
 				this.canvas.translate(this.pos.x + this.size / 2, this.pos.y + this.size / 2);
 				this.predraw();
 				this.canvas.translate(-this.pos.x - this.size / 2, -this.pos.y - this.size / 2);
 				this.canvas.font = this.size + 'pt ' + this.font;
+				//this.canvas.scale(oa, 1);
 				if (this.st) {
 					this.canvas.strokeStyle = this.fill;
 					this.canvas.strokeText(this.text, this.pos.x, this.pos.y);

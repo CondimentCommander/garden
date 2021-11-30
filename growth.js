@@ -71,6 +71,15 @@ Plot.growWeed = (tile) => {
 Plot.mutate = (tile) => {
 	
 };
+Plot.crossBreed = (tile) => {
+	
+};
 Plot.decay = (tile) => {
 	Plot.uproot(tile);
+};
+Plot.getArea = (x, y, w, h) => {
+	
+};
+Plot.checkRadius = (x, y, size) => {
+	
 };

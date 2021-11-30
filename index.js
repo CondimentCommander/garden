@@ -44,6 +44,7 @@ var Game = {
 			if (this.events.chhov == undefined) this.events.chhov = () => {};
 			if (this.events.move == undefined) this.events.move = () => {};
 			if (this.events.init == undefined) this.events.init = () => {};
+			if (this.events.swap == undefined) this.events.swap = () => {};
 		}
 	},
 	init: () => {
@@ -86,7 +87,10 @@ function start() {
 	Plot.tick();
 	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
 	
+	Game.heldTool = Game.tools[0];
+	Plot.farm.style.cursor = 'url(' + Game.heldTool.icon + '),auto';
 	Game.heldTool.events.init();
+	
 	if (Game.dev.showWelcome) {
 		let panel = new Interface.Panel(document.getElementById('welcome'));
 		Interface.openFloat(panel);

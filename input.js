@@ -37,7 +37,7 @@ Game.panStop = (event) => {
 	Game.mouseDown = false;
 };
 Game.panMove = (event) => {
-	Game.heldTool.events.move(event.offsetX, event.offsetY);
+	Game.heldTool.events.move(event.clientX - 8, event.clientY - 8);
 	Game.focused = document.elementFromPoint(event.clientX, event.clientY) == Graphics.canvas;
 	Game.appMousePos = [event.offsetX, event.offsetY];
 	//console.log(Game.focused);
@@ -45,8 +45,8 @@ Game.panMove = (event) => {
 	//if (!Game.focused) Game.appMousePos[1] -= document.elementFromPoint(event.clientX, event.clientY).clientHeight;
 	if (Game.mouseDown) {
 		let margin = Plot.farm.getBoundingClientRect().left;
-		let moveX = ((event.offsetX - Game.panStartX) - margin);
-		let moveY = (event.offsetY - Game.panStartY);
+		let moveX = ((event.clientX - 8 - Game.panStartX) - margin);
+		let moveY = (event.clientY - 8 - Game.panStartY);
 		let calcX = Game.plotX + moveX;
 		let calcY = Game.plotY + moveY;
 		let ts = Graphics.screenInfo().ts;
@@ -70,11 +70,11 @@ Game.panMove = (event) => {
 		Graphics.setPos(Plot.tb, calcX, calcY);
 		Plot.move();
 	} else {
-		let pos = Game.getTilePos(event.offsetX, event.offsetY);
+		let pos = Game.getTilePos(event.clientX - 8, event.clientY - 8);
 		let tiles = Plot.tb.rows;
 		if (!pos) {
 			tiles.item(Game.hovered[1]).cells.item(Game.hovered[0]).style.opacity = 0;
-			if (Game.hovered.length != 0) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
+			if (Game.hovered.length != 0) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.clientX - 8, event.clientY - 8);
 			Game.hovered = [];
 			return;
 		}
@@ -87,8 +87,8 @@ Game.panMove = (event) => {
 			//if (Game.hovered.length != 0) Game.heldTool.events.unhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
 			let tmp = Game.hovered;
 			Game.hovered = pos;
-			if (Game.hovered.length != 0) Game.heldTool.events.chhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
-			if (tmp.length == 0) Game.heldTool.events.hov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.offsetX, event.offsetY);
+			if (Game.hovered.length != 0) Game.heldTool.events.chhov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.clientX - 8, event.clientY - 8);
+			if (tmp.length == 0) Game.heldTool.events.hov(Plot.tiles[Game.hovered[1]][Game.hovered[0]], event.clientX - 8, event.clientY - 8);
 			tile.style.opacity = 0.14;
 		}
 	}
