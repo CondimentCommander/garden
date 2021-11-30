@@ -9,7 +9,7 @@ Plot.execute = (func) => {
 Plot.tick = () => {
 	Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
 	Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
-	Graphics.prog = Plot.cycletime / 30;
+	Graphics.prog = Plot.cycletime / Graphics.frameRate;
 	clearInterval(Graphics.timeInterval);
 	Graphics.time = Plot.cycletime / 1000 + 1;
 	Graphics.timer();

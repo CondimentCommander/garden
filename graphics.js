@@ -1,5 +1,5 @@
 var Graphics = {
-	frameRate: 30,
+	frameRate: 48,
 	filters: [],
 	Resource: class {
 		constructor(id, src) {
@@ -61,12 +61,14 @@ var Graphics = {
 			this.canvas.globalAlpha = this.op;
 			this.canvas.rotate(this.rot * Math.PI / 180);
 			this.filcomp = "";
-			for (let i = 0; i < Graphics.filters.length; i++) {
-				this.filcomp = this.filcomp + Graphics.filters[i] + " ";
+			if (this.filters != undefined) {
+				for (let i = 0; i < Graphics.filters.length; i++) {
+					this.filcomp = this.filcomp + Graphics.filters[i] + " ";
+				}
+				if (this.filters != undefined) this.filcomp = this.filcomp + this.filters;
+				this.filcomp = this.filcomp.trim();
+				this.canvas.filter = this.filcomp;
 			}
-			if (this.filters != undefined) this.filcomp = this.filcomp + this.filters;
-			this.filcomp = this.filcomp.trim();
-			this.canvas.filter = this.filcomp;
 		}
 		prop() { //updates the current value of the element in the element list to be in the layer
 			Graphics.elemLayers[this.lr][this.id] = this;
@@ -94,11 +96,10 @@ var Graphics = {
 			}
 			draw() {
 				this.canvas.resetTransform();
-				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
+				if (this.rot != 0) this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
-				this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
+				if (this.rot != 0) this.canvas.translate(-this.pos.x - this.scale / 2, -this.pos.y - this.scale / 2);
 				if (this.img.ready) {
-					//this.image.style.filter = this.filcomp;
 					if (this.slicex == undefined) {
 						this.canvas.drawImage(this.image, this.pos.x, this.pos.y, this.scale, this.scale);
 					} else {
@@ -171,7 +172,7 @@ var Graphics = {
 				this.fill = data.fill;
 			}
 			draw() {
-				let oa = Graphics.screenInfo().oa;
+				//let oa = Graphics.screenInfo().oa;
 				this.canvas.resetTransform();
 				this.canvas.translate(this.pos.x + this.size / 2, this.pos.y + this.size / 2);
 				this.predraw();
@@ -209,7 +210,7 @@ var Graphics = {
 		return { ts: tilesize, ps: pixelsize, ss: screensize, mr: margin, oa: ovAspect, ox: ovx, oy: ovy };
 	},
 	refresh: () => {
-		Graphics.ctx.clearRect(0, 0, 512, 512);
+		//Graphics.ctx.clearRect(0, 0, 512, 512);
 		Graphics.ov.clearRect(0, 0, 2048, 1024);
 	},
 	elems: {},
@@ -269,7 +270,6 @@ var Graphics = {
 	},
 	update: () => {
 		Graphics.refresh();
-		//Graphics.ovPattern();
 		for (let i = 0; i < 11; i++) {
 			Object.values(Graphics.elemLayers[i]).forEach((element) => {
 				element.draw();
