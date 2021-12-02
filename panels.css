@@ -1,10 +1,10 @@
 .panel {
-	background-color: yellow;
+	background-color: #3c9120;
 	box-sizing: border-box;
 	margin: 0px;
 }
 .float_panel {
-	background-color: yellow;
+	background-color: #3c9120;
 	border-style: solid;
 	border-color: black;
 	border-radius: 16px;
@@ -20,14 +20,15 @@
 }
 .panel_x {
 	position: absolute;
-	top: 5%;
-	right: 3%;
-	padding: 0.6%;
-	width: 1.8%;
-	height: 1.8%;
-	font-weight: bold;
-	font-family: Monospace;
-	font-size: 115%;
+	top: 1%;
+	right: 1%;
+	padding: 1.1%;
+	background-color: red;
+	border-style: solid;
+	border-radius: 100px;
+	border-color: black;
+	border-width: 4px;
+	box-sizing: content-box;
 }
 .top {
 	position: absolute;

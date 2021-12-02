@@ -28,3 +28,16 @@ function randRot() {
 	let r = Math.random() * 360;
 	return snapValue(r, 90);
 }
+
+function getArea(x, y, w, h, a) {
+	if (w + x > a[0].length) w = a[0].length - x;
+	if (h + y > a.length) h = a.length - y;
+	let out = [];
+	for (i = y; i < h + y; i++) {
+		out.push([]);
+		for (let j = x; j < w + x; j++) {
+			out[i - y].push(a[i][j]);
+		}
+	}
+	return out;
+}

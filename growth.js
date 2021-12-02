@@ -72,14 +72,21 @@ Plot.mutate = (tile) => {
 	
 };
 Plot.crossBreed = (tile) => {
-	
+	let si = Graphics.screenInfo();
+	let contenders = Plot.checkRadius(tile.x / si.ts, tile.y / si.ts, 1, (e) => {e.plant.plant.id == 2}, true);
+	console.log(contenders);
 };
 Plot.decay = (tile) => {
 	Plot.uproot(tile);
 };
 Plot.getArea = (x, y, w, h) => {
-	
+	return getArea(x, y, w, h, Plot.tiles);
 };
-Plot.checkRadius = (x, y, size) => {
-	
+Plot.checkRadius = (x, y, size, check, exclude) => {
+	let si = Graphics.screenInfo();
+	let ar = getArea(x - size, y - size, size * 2 + 1, size * 2 + 1, Plot.tiles);
+	return ar.forEach((e) => {e.filter((el) => {
+		if (exclude && el.x == x / si.ts && el.y == y / si.ts) return false;
+		return check(el);
+	})});
 };

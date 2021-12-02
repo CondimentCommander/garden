@@ -3,6 +3,7 @@
 	<title>Garden</title>
 	<link rel="stylesheet" href="index.css">
 	<link rel="stylesheet" href="panels.css">
+	<link rel="stylesheet" href="ui.css">
 	<script src="graphics.js"></script>
 	<script src="plot.js"></script>
 	<script src="index.js"></script>
@@ -22,10 +23,10 @@
 	<div class="float_panel panel" id="test" data-fill="main"></div>
 	<div id="dim" onclick="Interface.closeFloat(Interface.activeFloat)"></div>
 	<div class="float_panel panel" id="welcome" data-fill="main">
-		<div class="panel_x" onclick="Interface.close(event)">X</div>
+		<div class="panel_x" onclick="Interface.close(event)"></div>
 	</div>
 	<div class="float_panel panel" id="inventory" data-fill="main">
-		<div class="panel_x" onclick="Interface.close(event)">X</div>
+		<div class="panel_x" onclick="Interface.close(event)"></div>
 	</div>
 	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
 		<div id="plot">
@@ -33,6 +34,7 @@
 			
 			</table>
 		</div>
+		<canvas class="canvas" id="bg" width="512" height="512"></canvas>
 		<canvas class="canvas" id="can" width="512" height="512"></canvas>
 		<div id="ticktimer"></div>
 		<div id="toolbar">
@@ -48,7 +50,7 @@
 		</div>
 	</div>
 	<div class="section" id="right_bar">
-		<div class="bar_button" onclick=""><img class="barimg" src="images/bag.png"></div>
+		<div class="bar_button" onclick="Interface.openFloat(Interface.inventory)"><img class="barimg" src="images/bag.png" width="64px" height="64px"></div>
 	</div>
 	<div class="section" id="seeds" onmouseup="Game.panStop(event)">
 		

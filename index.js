@@ -75,6 +75,8 @@ function start() {
 	Graphics.ov = Graphics.overlay.getContext('2d');
 	Graphics.canvas = document.getElementById('can');
 	Graphics.ctx = Graphics.canvas.getContext('2d');
+	Graphics.background = document.getElementById('bg');
+	Graphics.bg = Graphics.background.getContext('2d');
 	Graphics.initial();
 	Game.init();
 	Interface.init();

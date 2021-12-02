@@ -55,11 +55,12 @@ var Graphics = {
 		}
 		renderInfo() {
 			if (this.lr > 5) return Graphics.ov;
-			if (this.lr <= 5) return Graphics.ctx;
+			if (this.lr <= 5 && this.lr > 0) return Graphics.ctx;
+			if (this.lr == 0) return Graphics.bg;
 		}
 		predraw() {
 			this.canvas.globalAlpha = this.op;
-			this.canvas.rotate(this.rot * Math.PI / 180);
+			if (this.rot != 0) this.canvas.rotate(this.rot * Math.PI / 180);
 			this.filcomp = "";
 			if (this.filters != undefined) {
 				for (let i = 0; i < Graphics.filters.length; i++) {
@@ -140,11 +141,6 @@ var Graphics = {
 				super(x, y, data);
 				this.img = data.img;
 				this.image = this.img.img;
-				//this.ready = false;
-				//this.image.onload = () => {
-					//this.ready = true;
-				//};
-				//this.image.src = this.img;
 				this.width = data.w;
 				this.height = data.h;
 			}
@@ -156,9 +152,9 @@ var Graphics = {
 				
 				if (this.img.ready) {
 					this.pat = this.canvas.createPattern(this.image, 'repeat');
-					this.canvas.rect(this.pos.x, this.pos.y, this.width, this.height);
+					this.canvas.beginPath();
 					this.canvas.fillStyle = this.pat;
-					this.canvas.fill();
+					this.canvas.fillRect(this.pos.x, this.pos.y, this.width, this.height);
 				}
 			}
 		}
@@ -210,8 +206,12 @@ var Graphics = {
 		return { ts: tilesize, ps: pixelsize, ss: screensize, mr: margin, oa: ovAspect, ox: ovx, oy: ovy };
 	},
 	refresh: () => {
-		//Graphics.ctx.clearRect(0, 0, 512, 512);
+		Graphics.ctx.clearRect(0, 0, 512, 512);
 		Graphics.ov.clearRect(0, 0, 2048, 1024);
+	},
+	refreshBG: () => {
+		Graphics.bg.clearRect(0, 0, 512, 512);
+		Graphics.bgRender = true;
 	},
 	elems: {},
 	elemLayers: [],
@@ -253,6 +253,9 @@ var Graphics = {
 		Graphics.defineElements();
 		Graphics.ctx.imageSmoothingEnabled = false;
 		Graphics.ov.imageSmoothingEnabled = false;
+		Graphics.bg.imageSmoothingEnabled = false;
+		
+		Graphics.bgRender = true;
 		
 		Graphics.resources = {
 			'sprites1': new Graphics.Resource(1, 'images/sprites1.png'),
@@ -265,16 +268,19 @@ var Graphics = {
 		for (let i = 0; i < 11; i++) {
 			Graphics.elemLayers.push({});
 		}
-		Graphics.bg = new Graphics.PatternElement(0, 0, { img: Graphics.resources['bg'], w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
+		Graphics.back = new Graphics.PatternElement(0, 0, { img: Graphics.resources['bg'], w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
 		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
+		//window.requestAnimationFrame(Graphics.update);
 	},
 	update: () => {
 		Graphics.refresh();
 		for (let i = 0; i < 11; i++) {
 			Object.values(Graphics.elemLayers[i]).forEach((element) => {
+				if (!Graphics.bgRender && element.lr == 0) return;
 				element.draw();
 			});
 		}
+		Graphics.bgRender = false;
 	},
 	stop: () => {
 		clearInterval(Graphics.interval);
