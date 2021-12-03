@@ -72,11 +72,11 @@ var Plot = {
 				sprite.pos.y = i * ps + Plot.pos.y;
 				tile.x = sprite.pos.x;
 				tile.y = sprite.pos.y;
-				sprite.prop();
+				tile.plotx = tile.x - Plot.pos.x;
+				tile.ploty = tile.y - Plot.pos.y;
 				sprite = Graphics.elems[tile.plant.sprite];
 				sprite.pos.x = tile.x;
 				sprite.pos.y = tile.y;
-				sprite.prop();
 			}
 		}
 		for (let i = 0; i < 11; i++) {
@@ -98,7 +98,6 @@ var Plot = {
 			let y = tiles[i].parentElement.rowIndex;
 			tiles[i].style.padding = info.ts / 2 + 'px';
 		}
-		Graphics.setPos(Plot.tb, Plot.pos.x / info.ps * info.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / info.ps * info.ts + 8);
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 		for (let i = 0; i < Plot.height; i++) {
 			Plot.tiles[i].forEach((t) => {
@@ -113,6 +112,18 @@ var Plot = {
 		//Plot.pos.x -= lockValue(Game.appMousePos[0] - Plot.pos.x, info.ts);
 		//Plot.pos.y -= lockValue(Game.appMousePos[1] - Plot.pos.y, info.ts);
 		Plot.move();
+		let fix = (old / z) == 2;
+		if (fix) {
+			Plot.pos.x += snapValue(Plot.width / 2 * info.ps, info.ps);
+			Plot.pos.y += snapValue(Plot.height / 2 * info.ps, info.ps);
+			if (Plot.width % 2 == 1) Plot.pos.x += snapValue((Plot.width / 2) * info.ps, info.ps);
+			if (Plot.height % 2 == 1) Plot.pos.y += snapValue((Plot.height / 2) * info.ps, info.ps);
+		} else {
+			Plot.pos.x -= snapValue((Plot.width - 1) / 2 * info.ps, info.ps);
+			Plot.pos.y -= snapValue((Plot.height - 1) / 2 * info.ps, info.ps);
+		}
+		Plot.move();
+		Graphics.setPos(Plot.tb, Plot.pos.x / info.ps * info.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / info.ps * info.ts + 8);
 	},
 	renderUpdate: () => {
 		for (let i = 0; i < Plot.height; i++) {

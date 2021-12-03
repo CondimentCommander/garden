@@ -83,6 +83,11 @@ function start() {
 	Plot.generate();
 	Plot.render();
 	Plot.changeZoom(64);
+	let si = Graphics.screenInfo();
+	Plot.pos.x = 256;
+	Plot.pos.y = 256;
+	Plot.move();
+	Graphics.setPos(Plot.tb, Plot.pos.x / si.ps * si.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / si.ps * si.ts + 8);
 	
 	Graphics.timerEl = document.getElementById('ticktimer');
 	Graphics.time = Plot.cycletime / 1000;

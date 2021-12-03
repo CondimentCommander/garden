@@ -32,6 +32,8 @@ function randRot() {
 function getArea(x, y, w, h, a) {
 	if (w + x > a[0].length) w = a[0].length - x;
 	if (h + y > a.length) h = a.length - y;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
 	let out = [];
 	for (i = y; i < h + y; i++) {
 		out.push([]);
