@@ -97,6 +97,9 @@ function start() {
 	Game.heldTool = Game.tools[0];
 	Plot.farm.style.cursor = 'url(' + Game.heldTool.icon + '),auto';
 	Game.heldTool.events.init();
+	console.log(document.getElementById('tool_' + Game.heldTool.name));
+	document.getElementById('tool_' + Game.heldTool.name).style.width = '60px';
+	document.getElementById('tool_' + Game.heldTool.name).firstElementChild.style.marginLeft = '15px';
 	
 	if (Game.dev.showWelcome) {
 		let panel = new Interface.Panel(document.getElementById('welcome'));

@@ -245,6 +245,13 @@ var Graphics = {
 		let ya = (y + 8) / i.oy;
 		return [xa, ya];
 	},
+	converta: (v, y) => {
+		let i = Graphics.screenInfo();
+		let va = 0;
+		if (!y) va = (v + i.mr + 8) / i.ox;
+		if (y) va = (v + 8) / i.oy;
+		return va;
+	},
 	timer: () => {
 		Graphics.time--;
 		Graphics.timerEl.innerHTML = Graphics.time + "s";
