@@ -39,6 +39,7 @@ Game.tools = [
 		//Game.heldTool.sprite = new Graphics.SpriteElement(0, 0, { img: Game.plants[2].growth.stages[0].img, s: Graphics.converta(16, ), opacity: 1, viewLayer: 6 }).add();
 		Game.heldTool.sprite = Graphics.fromData(Game.plants[2].growth.stages[0], 0, 0, true).add();
 		Graphics.elems[Game.heldTool.sprite].op = 0;
+		Graphics.elems[Game.heldTool.sprite].zoom = true;
 	}, swap: () => {
 		Graphics.elems[Game.heldTool.sprite].remove();
 	}})

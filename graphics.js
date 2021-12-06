@@ -94,6 +94,7 @@ var Graphics = {
 				this.slicey = data.sy;
 				this.slicescale = data.sls;
 				this.filters = data.fil;
+				this.zoom = data.zoom;
 			}
 			draw() {
 				this.canvas.resetTransform();
