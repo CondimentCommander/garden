@@ -14,7 +14,7 @@ Game.tools = [
 	}, swap: () => {
 		Graphics.elems[Game.heldTool.text].remove();
 	}}),
-	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/lime/2.png', {click: (tile, x, y) => {
+	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/lime/1.png', {click: (tile, x, y) => {
 		tile.plant.inh.events.harvest(tile);
 	}}),
 	new Game.Tool('Plant', 'Plant seeds on farmland', 'images/plant.cur', {hov: (tile, x, y) => {

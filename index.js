@@ -8,7 +8,7 @@ var Game = {
 			this.id = id;
 			this.dn = displayName;
 			this.growth = {};
-			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}, harvest: (tile) => {Plot.plant(tile, Game.plants[1])}};
+			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}, harvest: (tile) => {Plot.harvest(tile)}};
 			this.inh = {};
 		}
 		setinh() {

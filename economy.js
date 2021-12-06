@@ -19,30 +19,40 @@ Game.inv = {
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', Graphics.resources['lime'], [], Game.plants[2])
+			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', [], Game.plants[2])
 		}
 	},
 	getOwned: () => {
-		return Object.values(Game.inv.items).filter((e) => {e.amount > 0});
+		return Object.values(Game.inv.items).filter((e) => {return e.amount > 0});
 	},
 	getGenerated: (a) => {
 		return a.filter((e) => {!Interface.inventory.elem.children.map((f) => {f.id.substr(4)}).includes(e)});
 	},
 	genInv: () => {
 		let owned = Game.inv.getOwned();
-		let panel = Interface.inventory;
-		let gen = Game.inv.getGenerated(owned);
+		let gen = owned;
+		while (Game.inv.sect.hasChildNodes()) {
+			Game.inv.sect.removeChild(Game.inv.sect.firstChild);
+		}
 		for (let i = 0; i < gen.length; i++) {
 			let elem = document.createElement("DIV");
 			elem.id = 'inb_' + gen[i].id;
 			elem.className = 'inb';
 			let img = document.createElement("IMG");
+			img.width = 64;
+			img.height = 64;
 			img.src = gen[i].icon;
+			let amt = document.createTextNode(gen[i].amount);
+			let amtd = document.createElement("DIV");
+			amtd.className = 'inv_amt';
+			amtd.appendChild(amt);
 			elem.appendChild(img);
-			panel.appendChild(elem);
+			elem.appendChild(amtd);
+			Game.inv.sect.appendChild(elem);
 		}
 	},
 	init: () => {
+		Game.inv.sect = document.getElementById('inv_items');
 		Game.inv.seeds = {};
 		Game.inv.defineItems();
 	}

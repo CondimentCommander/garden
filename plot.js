@@ -131,5 +131,13 @@ var Plot = {
 				let sprite = Graphics.elems[Plot.tiles[i][j].sprite];
 			}
 		}
+	},
+	harvest: (tile) => {
+		if (tile.plant.plant.id == 1) return;
+		let seed = Game.inv.items[tile.plant.plant.name + '_seed'];
+		Plot.uproot(tile);
+		if (!tile.plant.stage >= 1) return;
+		seed.amount++;
+		console.log(seed.amount);
 	}
 };

@@ -34,8 +34,9 @@
 	border-left-style: none;
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
-	background-color: #3c9120;
+	background-color: #a0c94f;
 	image-rendering: pixelated;
+	width: 48px;
 }
 .tile_b {
 	cursor: pointer;
@@ -149,7 +150,7 @@
 }
 
 .bar_button {
-	background-color: #3c9120;
+	background-color: #a0c94f;
 	border-style: solid;
 	border-bottom-style: none;
 	border-left-style: none;
