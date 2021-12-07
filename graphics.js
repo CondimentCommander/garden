@@ -28,6 +28,7 @@ var Graphics = {
 			this.pan = data.pan;
 			this.tag = data.tag;
 			this.filcomp = "";
+			this.anims = {};
 		}
 		randomId() {
 			let rand = Math.floor(Math.random() * 100000);
@@ -81,6 +82,10 @@ var Graphics = {
 		}
 		replaceData(dt) {
 			
+		}
+		addAnim(name, value, init, motion, scale, speed, dir, remove) {
+			let anim = new Graphics.Animation([this.id, value], init, motion, scale, speed, dir, remove, name).add();
+			this.anims[name] = anim;
 		}
 	},
 	defineElements: () => {
@@ -185,6 +190,64 @@ var Graphics = {
 				}
 			}
 		}
+		Graphics.Animation = class {
+			constructor(value, init, motion, scale, speed, dir, remove, name) {
+				this.value = value;
+				this.init = init;
+				this.motion = motion;
+				this.scale = scale;
+				this.speed = speed;
+				this.direction = dir;
+				this.rem = remove;
+				this.name = name;
+				this.v = init;
+				this.di = dir;
+			}
+			add() {
+				let rand = Math.floor(Math.random() * 100000);
+				while (Object.keys(Graphics.anims).includes(rand.toString())) {
+					rand = Math.floor(Math.random() * 100000);
+				}
+				this.id = rand;
+				Graphics.anims[this.id] = this;
+				return this.id;
+			}
+			iterate() {
+				let move = this.speed * this.direction;
+				
+				if (this.motion == 'zig_s' || this.motion == 'slope_s') {
+					if (this.direction == 1) move /= this.scale - this.v;
+					if (this.direction == -1) move /= this.v - this.init;
+					move += this.speed / 3;
+				}  
+				this.v += move;
+				if (this.v >= this.scale) {
+					this.v = this.scale;
+					if (this.motion == 'zig' || this.motion == 'zig_s') {
+						this.direction = -1;
+					} else {
+						if (this.rem) this.remove();
+					}
+				}
+				if (this.v <= this.init) {
+					if (this.motion == 'zig' || this.motion == 'zig_s') {
+						this.direction = 1;
+						if (this.rem) this.remove();
+					}
+				}
+				
+				Graphics.elems[this.value[0]][this.value[1]] = this.v;
+			}
+			reset() {
+				this.v = this.init;
+				this.dir = this.di;
+				Graphics.elems[this.value[0]][this.value[1]] = this.v;
+			}
+			remove() {
+				delete Graphics.elems[this.value[0]].anims[this.name];
+				delete Graphics.anims[this.id];
+			}
+		}
 		Graphics.fromData = function (dt, x, y) {
 			let sprite = new Graphics.SpriteElement(x, y, dt)
 			if (dt.ft != undefined) sprite = new Graphics.AnimatedSpriteElement(x, y, dt);
@@ -216,6 +279,7 @@ var Graphics = {
 	},
 	elems: {},
 	elemLayers: [],
+	anims: {},
 	addFilter: (fil, ov) => {
 		//Graphics.filters.push(fil);
 		if (!ov) Graphics.ctx.filter = fil;
@@ -288,6 +352,9 @@ var Graphics = {
 				element.draw();
 			});
 		}
+		Object.values(Graphics.anims).forEach((a) => {
+			a.iterate();
+		});
 		Graphics.bgRender = false;
 	},
 	stop: () => {

@@ -45,6 +45,7 @@ var Game = {
 			if (this.events.move == undefined) this.events.move = () => {};
 			if (this.events.init == undefined) this.events.init = () => {};
 			if (this.events.swap == undefined) this.events.swap = () => {};
+			if (this.events.tc == undefined) this.events.tc = () => {};
 		}
 	},
 	init: () => {
@@ -94,12 +95,16 @@ function start() {
 	Plot.tick();
 	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
 	
+	Game.toolsInit();
 	Game.heldTool = Game.tools[0];
 	Plot.farm.style.cursor = 'url(' + Game.heldTool.icon + '),auto';
 	Game.heldTool.events.init();
-	console.log(document.getElementById('tool_' + Game.heldTool.name));
 	document.getElementById('tool_' + Game.heldTool.name).style.width = '60px';
 	document.getElementById('tool_' + Game.heldTool.name).firstElementChild.style.marginLeft = '15px';
+	document.getElementById('tc_' + Game.heldTool.name).style.display = 'block';
+	Game.heldTool.events.tc(Game.toolContext);
+
+	Sound.init();
 	
 	if (Game.dev.showWelcome) {
 		let panel = new Interface.Panel(document.getElementById('welcome'));

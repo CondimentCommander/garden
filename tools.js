@@ -1,10 +1,19 @@
 Game.tools = [
 	new Game.Tool('Inspect', 'View plant information', 'images/glass.cur', {hov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.text].op = 1;
+		if (tile.plant.plant.id == 1) {
+			Graphics.elems[Game.heldTool.text].op = 0;
+		} else {
+			Graphics.elems[Game.heldTool.text].op = 1;
+		}
 	}, unhov: (tile, x, y) => {
 		Graphics.elems[Game.heldTool.text].op = 0;
 	}, chhov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name + '\n' + tile.plant.grows;
+		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name + '\n' + tile.plant.grows + tile.plant.stage;
+		if (tile.plant.plant.id == 1) {
+			Graphics.elems[Game.heldTool.text].op = 0;
+		} else {
+			Graphics.elems[Game.heldTool.text].op = 1;
+		}
 	}, move: (x, y) => {
 		if (Game.heldTool.text == undefined) return;
 		let con = Graphics.convert(x, y);
@@ -23,11 +32,12 @@ Game.tools = [
 		Graphics.elems[Game.heldTool.sprite].op = 0;
 	}, chhov: (tile, x, y) => {
 		if (Game.heldTool.sprite == undefined) return;
-		let i = Graphics.screenInfo();
-		//let pos = Game.getTilePos(x, y);
-		//let pos = [snapValue(x, i.ps), snapValue(y, i.ps)]
+		if (tile.plant.plant.id != 1) {
+			Graphics.elems[Game.heldTool.sprite].op = 0;
+		} else {
+			Graphics.elems[Game.heldTool.sprite].op = 0.5;
+		}
 		let pos = [tile.x, tile.y];
-		//let con = Graphics.convert(pos[0], pos[1]);
 		let con = pos;
 		Graphics.elems[Game.heldTool.sprite].pos = { x: con[0], y: con[1] };
 	}, move: (x, y) => {
@@ -42,6 +52,19 @@ Game.tools = [
 		Graphics.elems[Game.heldTool.sprite].zoom = true;
 	}, swap: () => {
 		Graphics.elems[Game.heldTool.sprite].remove();
+	}, tc: (el) => {
+		console.log('d');
+		let owned = Game.inv.getOwned();
+		clearChildren(el);
+		let seeds = owned.filter((a) => {Game.inv.seeds.includes(a)});
+		seeds.forEach((a) => {
+			let img = document.createElement("IMG");
+			img.src = a.icon;
+			let div = document.createElement("DIV");
+			div.className = 'tcplantseed';
+			div.appendChild(img);
+			el.appendChild(elem);
+		});
 	}})
 ];
 
@@ -55,4 +78,10 @@ Game.changeTool = (t) => {
 	document.getElementById('tool_' + Game.tools[t].name).firstElementChild.style.marginLeft = '15px';
 	document.getElementById('tool_' + prev.name).style.width = '48px';
 	document.getElementById('tool_' + prev.name).firstElementChild.style.marginLeft = '0px';
+	document.getElementById('tc_' + prev.name).style.display = 'none';
+	document.getElementById('tc_' + Game.tools[t].name).style.display = 'block';
+	Game.heldTool.events.tc(document.getElementById('tc_' + Game.tools[t].name));
 };
+Game.toolsInit = () => {
+	Game.toolContext = document.getElementById('toolcontext');
+}

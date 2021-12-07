@@ -31,9 +31,7 @@ Game.inv = {
 	genInv: () => {
 		let owned = Game.inv.getOwned();
 		let gen = owned;
-		while (Game.inv.sect.hasChildNodes()) {
-			Game.inv.sect.removeChild(Game.inv.sect.firstChild);
-		}
+		clearChildren(Game.inv.sect);
 		for (let i = 0; i < gen.length; i++) {
 			let elem = document.createElement("DIV");
 			elem.id = 'inb_' + gen[i].id;

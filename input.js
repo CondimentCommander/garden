@@ -6,6 +6,7 @@ Game.plotY = 0;
 Game.hovered = [];
 Game.scroll = 0;
 Game.appMousePos = [];
+Game.mousePos = [];
 Game.focused = false;
 Game.getTilePos = (x, y) => {
 	i = Graphics.screenInfo();
@@ -38,6 +39,7 @@ Game.panStop = (event) => {
 };
 Game.panMove = (event) => {
 	Game.heldTool.events.move(event.clientX - 8, event.clientY - 8);
+	Game.mousePos = [event.clientX - 8, event.clientY - 8];
 	Game.focused = document.elementFromPoint(event.clientX, event.clientY) == Graphics.canvas;
 	Game.appMousePos = [event.offsetX, event.offsetY];
 	//console.log(Game.focused);
@@ -115,6 +117,7 @@ Game.clickPlot = (event) => {
 		//eval(document.elementFromPoint(event.clientX, event.clientY).dataset.click);
 		return;
 	}
+	Sound.playSound('click.wav');
 	let pos = Game.getTilePos(event.offsetX, event.offsetY);
 	if (!pos) return;
 	Game.heldTool.events.click(Plot.tiles[pos[1]][pos[0]], event.offsetX, event.offsetY);

@@ -43,3 +43,8 @@ function getArea(x, y, w, h, a) {
 	}
 	return out;
 }
+function clearChildren(elem) {
+	while (elem.hasChildNodes()) {
+		elem.removeChild(elem.firstChild);
+	}
+}

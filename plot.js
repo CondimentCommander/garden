@@ -58,7 +58,7 @@ var Plot = {
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
 				let r = randRot();
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32, rot: r }).add();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32, rot: r, tag: 'tile' }).add();
 			}
 		}
 	},
@@ -87,7 +87,7 @@ var Plot = {
 			});
 		}
 	},
-	changeZoom: (z) => {
+	changeZoom: (z, center = false) => {
 		let old = Plot.zoom;
 		Plot.zoom = z;
 		let diff = old / Plot.zoom;
@@ -104,28 +104,34 @@ var Plot = {
 				let x = (t.x - Plot.pos.x) / 2 + Plot.pos.x;
 				let y = (t.y - Plot.pos.y) / 2 + Plot.pos.y;
 				let r = randRot();
-				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32, rot: Graphics.elems[t.sprite].rot }));
+				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32, rot: Graphics.elems[t.sprite].rot, tag: 'tile' }));
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], x, y));
 			});
 		}
-		console.log(diff);
 		Object.values(Graphics.elems).filter((e) => {return e.zoom}).forEach((e) => {e.scale /= diff; e.slicescale = Plot.zoom / 32});
 		info = Graphics.screenInfo();
 		//Plot.pos.x -= lockValue(Game.appMousePos[0] - Plot.pos.x, info.ts);
 		//Plot.pos.y -= lockValue(Game.appMousePos[1] - Plot.pos.y, info.ts);
 		Plot.move();
 		let fix = (old / z) == 2;
-		if (fix) {
-			Plot.pos.x += snapValue(Plot.width / 2 * info.ps, info.ps);
-			Plot.pos.y += snapValue(Plot.height / 2 * info.ps, info.ps);
-			if (Plot.width % 2 == 1) Plot.pos.x += snapValue((Plot.width / 2) * info.ps, info.ps);
-			if (Plot.height % 2 == 1) Plot.pos.y += snapValue((Plot.height / 2) * info.ps, info.ps);
-		} else {
-			Plot.pos.x -= snapValue((Plot.width - 1) / 2 * info.ps, info.ps);
-			Plot.pos.y -= snapValue((Plot.height - 1) / 2 * info.ps, info.ps);
+		if (diff != 1) {
+			if (center) {
+
+			} else {
+				if (fix) {
+					Plot.pos.x += snapValue(Plot.width / 2 * info.ps, info.ps);
+					Plot.pos.y += snapValue(Plot.height / 2 * info.ps, info.ps);
+					if (Plot.width % 2 == 1) Plot.pos.x += snapValue((Plot.width / 2) * info.ps, info.ps);
+					if (Plot.height % 2 == 1) Plot.pos.y += snapValue((Plot.height / 2) * info.ps, info.ps);
+				} else {
+					Plot.pos.x -= snapValue((Plot.width - 1) / 2 * info.ps, info.ps);
+					Plot.pos.y -= snapValue((Plot.height - 1) / 2 * info.ps, info.ps);
+				}
+			}
 		}
 		Plot.move();
 		Graphics.setPos(Plot.tb, Plot.pos.x / info.ps * info.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / info.ps * info.ts + 8);
+		if (Game.heldTool != undefined) Game.heldTool.events.move(Game.mousePos[0], Game.mousePos[1]);
 	},
 	renderUpdate: () => {
 		for (let i = 0; i < Plot.height; i++) {
@@ -138,7 +144,7 @@ var Plot = {
 		if (tile.plant.plant.id == 1) return;
 		let seed = Game.inv.items[tile.plant.plant.name + '_seed'];
 		Plot.uproot(tile);
-		if (!tile.plant.stage >= 1) return;
+		if (!tile.plant.grows >= tile.plant.plant.growth.stages.length) return;
 		seed.amount++;
 		console.log(seed.amount);
 	}

@@ -59,10 +59,18 @@
 	left: 0px;
 }
 #toolcontext {
-	bottom: 15px;
-	width: 35%;
-	height: 5%;
-	left: 50vw;
+	position: relative;
+	width: 60%;
+	left: 25%;
+	z-index: 7;
+	top: 1%;
+}
+.tc {
+	display: none;
+	height: 100%
+}
+#tc_Plant:hover {
+	
 }
 #dim {
 	background-color: black;
