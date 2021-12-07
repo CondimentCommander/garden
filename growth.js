@@ -49,9 +49,11 @@ Plot.grow = (tile) => {
 			}
 		} else {
 			if (plant.stage == 2) {
-				let chance = plant.inh.growth.speed * 0.036 * plant.inh.growth.decay * Math.pow(plant.stagetime, 2) * Game.dev.fertillizer;
+				let chance = plant.inh.growth.speed * 0.003 * plant.inh.growth.decay * Math.pow(plant.stagetime, 1.5);
+				chance -= Math.random() * 0.1
 				let rand = Math.random();
-				//Graphics.elems[plant.sprite].op = lockValue(1 - chance * 4, 0, 1);
+				console.log(rand, chance);
+				Graphics.elems[plant.sprite].op = lockValue(1.4 - chance * 4, 0, 1);
 				if (rand <= chance) Plot.decay(tile);
 			}
 		}
