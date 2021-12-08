@@ -15,11 +15,11 @@ Game.inv = {
 				super(name, id, icon, categories);
 				this.plant = plant;
 				this.cat.push('Seed');
-				Game.inv.seeds[this.name] = this;
+				Game.inv.seeds[this.id] = this;
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', [], Game.plants[2])
+			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], Game.plants[2])
 		}
 	},
 	getOwned: () => {

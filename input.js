@@ -97,6 +97,7 @@ Game.panMove = (event) => {
 };
 Game.zoom = (event) => {
 	if (Game.mouseDown) return;
+	if (!Game.focused) return;
 	if (Game.scroll + event.deltaY >= -200 && Game.scroll + event.deltaY <= 200) Game.scroll += event.deltaY;
 	if (Game.scroll >= 100) {
 		if (Plot.zoom == 32) return;

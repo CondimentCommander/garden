@@ -101,7 +101,8 @@ function start() {
 	Game.heldTool.events.init();
 	document.getElementById('tool_' + Game.heldTool.name).style.width = '60px';
 	document.getElementById('tool_' + Game.heldTool.name).firstElementChild.style.marginLeft = '15px';
-	document.getElementById('tc_' + Game.heldTool.name).style.display = 'block';
+	Game.currentTc = document.getElementById('tc_' + Game.heldTool.name);
+	Game.currentTc.style.display = 'block';
 	Game.heldTool.events.tc(Game.toolContext);
 
 	Sound.init();

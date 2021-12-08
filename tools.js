@@ -7,8 +7,11 @@ Game.tools = [
 		}
 	}, unhov: (tile, x, y) => {
 		Graphics.elems[Game.heldTool.text].op = 0;
+		Game.heldTool.info = '';
 	}, chhov: (tile, x, y) => {
 		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name + '\n' + tile.plant.grows + tile.plant.stage;
+		Game.heldTool.info = [tile.plant.plant.name, tile.plant.inh.growth.stages[0].img.img.src, tile.plant.grows, tile.plant.stage];
+		Game.tcInspectUpdate(Game.currentTc);
 		if (tile.plant.plant.id == 1) {
 			Graphics.elems[Game.heldTool.text].op = 0;
 		} else {
@@ -20,8 +23,11 @@ Game.tools = [
 		Graphics.elems[Game.heldTool.text].pos = {x: con[0], y: con[1]};
 	}, init: () => {
 		Game.heldTool.text = new Graphics.TextElement(0, 0, { t: '', s: 15, f: 'Rubik', st: false, fill: 'white', viewLayer: 6 }).add();
+		Game.heldTool.info = '';
 	}, swap: () => {
 		Graphics.elems[Game.heldTool.text].remove();
+	}, tc: (el) => {
+		Game.tcInspectUpdate(el);
 	}}),
 	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/lime/1.png', {click: (tile, x, y) => {
 		tile.plant.inh.events.harvest(tile);
@@ -56,14 +62,18 @@ Game.tools = [
 		console.log('d');
 		let owned = Game.inv.getOwned();
 		clearChildren(el);
-		let seeds = owned.filter((a) => {Game.inv.seeds.includes(a)});
+		let seeds = owned.filter((a) => {return a.cat.includes('seed')});
 		seeds.forEach((a) => {
 			let img = document.createElement("IMG");
 			img.src = a.icon;
+			img.width = 48;
+			img.height = 48;
+			img.onclick = Game.tcPlantClick;
+			img.dataset.seed = a.id;
 			let div = document.createElement("DIV");
 			div.className = 'tcplantseed';
 			div.appendChild(img);
-			el.appendChild(elem);
+			el.appendChild(div);
 		});
 	}})
 ];
@@ -79,9 +89,31 @@ Game.changeTool = (t) => {
 	document.getElementById('tool_' + prev.name).style.width = '48px';
 	document.getElementById('tool_' + prev.name).firstElementChild.style.marginLeft = '0px';
 	document.getElementById('tc_' + prev.name).style.display = 'none';
-	document.getElementById('tc_' + Game.tools[t].name).style.display = 'block';
-	Game.heldTool.events.tc(document.getElementById('tc_' + Game.tools[t].name));
+	Game.currentTc = document.getElementById('tc_' + Game.tools[t].name);
+	document.getElementById('tc_' + Game.tools[t].name) = 'block';
+	Game.heldTool.events.tc(Game.currentTc);
 };
 Game.toolsInit = () => {
 	Game.toolContext = document.getElementById('toolcontext');
+};
+Game.tcPlantClick = (event) => {
+	console.log(event.srcElement);
+	let plant = Game.inv.items[event.srcElement.dataset.seed].plant.id;
+	Game.heldTool.plant = Game.plants[plant];
+	Graphics.elems[Game.heldTool.sprite].replace(Graphics.fromData(Game.plants[plant].growth.stages[0]));
+	Graphics.elems[Game.heldTool.sprite].op = 0;
+	Graphics.elems[Game.heldTool.sprite].zoom = true;
+};
+Game.tcInspectUpdate = (el) => {
+	clearChildren(el);
+	if (Game.heldTool.info == '') return;
+	let img = document.createElement("IMG");
+	img.src = Game.heldTool.info[1];
+	img.width = 32;
+	img.height = 32;
+	let text1 = document.createTextNode(Game.heldTool.info[0]);
+	let div1 = document.createElement("DIV");
+	div1.appendChild(text1);
+	el.appendChild(img);
+	el.appendChild(div1);
 }

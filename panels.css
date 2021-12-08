@@ -67,10 +67,16 @@
 }
 .tc {
 	display: none;
-	height: 100%
+	height: 100%;
+	padding: 1.7%;
 }
 #tc_Plant:hover {
-	
+	height: 40vh;
+}
+.tcplantseed {
+	border-style: solid;
+	image-rendering: pixelated;
+	display: inline-block;
 }
 #dim {
 	background-color: black;

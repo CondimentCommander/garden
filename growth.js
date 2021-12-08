@@ -38,7 +38,6 @@ Plot.grow = (tile) => {
 				plant.grows = length;
 				Plot.mutate(tile);
 			}
-			//console.log(plant.grows);
 			Graphics.elems[plant.sprite].replace(Graphics.fromData(plant.inh.growth.stages[plant.grows], tile.x, tile.y));
 		}
 	} else {
@@ -52,7 +51,7 @@ Plot.grow = (tile) => {
 				let chance = plant.inh.growth.speed * 0.003 * plant.inh.growth.decay * Math.pow(plant.stagetime, 1.5);
 				chance -= Math.random() * 0.1
 				let rand = Math.random();
-				console.log(rand, chance);
+				//console.log(rand, chance);
 				Graphics.elems[plant.sprite].op = lockValue(1.4 - chance * 4, 0, 1);
 				if (rand <= chance) Plot.decay(tile);
 			}

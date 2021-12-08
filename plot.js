@@ -61,6 +61,10 @@ var Plot = {
 				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32, rot: r, tag: 'tile' }).add();
 			}
 		}
+		Plot.edge = [];
+		for (let i = 0; i < Plot.width; i++) {
+			//Plot.edge.push(new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32, rot: r, tag: 'tile' }).add();)
+		}
 	},
 	move: () => {
 		let ps = Graphics.screenInfo().ps;
@@ -110,8 +114,6 @@ var Plot = {
 		}
 		Object.values(Graphics.elems).filter((e) => {return e.zoom}).forEach((e) => {e.scale /= diff; e.slicescale = Plot.zoom / 32});
 		info = Graphics.screenInfo();
-		//Plot.pos.x -= lockValue(Game.appMousePos[0] - Plot.pos.x, info.ts);
-		//Plot.pos.y -= lockValue(Game.appMousePos[1] - Plot.pos.y, info.ts);
 		Plot.move();
 		let fix = (old / z) == 2;
 		if (diff != 1) {
@@ -143,9 +145,8 @@ var Plot = {
 	harvest: (tile) => {
 		if (tile.plant.plant.id == 1) return;
 		let seed = Game.inv.items[tile.plant.plant.name + '_seed'];
-		Plot.uproot(tile);
-		if (!tile.plant.grows >= tile.plant.plant.growth.stages.length) return;
+		if (!tile.plant.stage >= 1) return;
 		seed.amount++;
-		console.log(seed.amount);
+		Plot.uproot(tile);
 	}
 };
