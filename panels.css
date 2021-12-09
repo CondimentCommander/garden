@@ -9,7 +9,7 @@
 	border-color: black;
 	border-radius: 16px;
 	display: none;
-	z-index: 6;
+	z-index: 11;
 }
 .float_panel[data-fill='main'] {
 	width: 80vw;
@@ -78,9 +78,22 @@
 	image-rendering: pixelated;
 	display: inline-block;
 }
+#settings {
+	padding: 5%;
+}
+#setwrap {
+	margin: auto;
+	border-style: solid;
+}
+.setting {
+
+}
+.i_slider {
+
+}
 #dim {
 	background-color: black;
-	z-index: 5;
+	z-index: 10;
 	opacity: 0;
 	width: 100%;
 	height: 100%;

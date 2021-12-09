@@ -52,13 +52,15 @@ var Game = {
 		Game.plants = [
 			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: Graphics.resources['lime2'], sa: 2, opacity: 1, viewLayer: 3 }, { img: Graphics.resources['lime'], s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }]}).setinh(),
 			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: Graphics.resources['grass'], sa: 2, opacity: 0, viewLayer: 3 }]}).addEvent('harvest', (tile) => {}).setinh(),
-			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 3, decay: 1, stages: [{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }]}).setinh(),
+			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }]}).setinh(),
+			new Game.Plant('cornweed', 3, 'Cornweed').setGrowth({ speed: 3, matureTime: 2, decay: 0.9, stages: [{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 0, sy: 0, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 0, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 0, slsa: 32 }] }).setinh()
 		];
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 		Game.inv.init();
+		Plot.weeds = {'9': Game.plants[2], '1': Game.plants[3]};
 	},
 	dev: {
-		fertilizer: 1,
+		fertilizer: 4,
 		showWelcome: false
 	}
 };
@@ -90,11 +92,12 @@ function start() {
 	Plot.move();
 	Graphics.setPos(Plot.tb, Plot.pos.x / si.ps * si.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / si.ps * si.ts + 8);
 	
+
+	Time.init();
 	Graphics.timerEl = document.getElementById('ticktimer');
-	Graphics.time = Plot.cycletime / 1000;
-	Plot.tick();
-	Plot.cycle = setInterval(Plot.tick, Plot.cycletime);
-	
+	Graphics.timer();
+	Graphics.timeInterval = setInterval(Graphics.timer, 1000);
+
 	Game.toolsInit();
 	Game.heldTool = Game.tools[0];
 	Plot.farm.style.cursor = 'url(' + Game.heldTool.icon + '),auto';
@@ -103,7 +106,7 @@ function start() {
 	document.getElementById('tool_' + Game.heldTool.name).firstElementChild.style.marginLeft = '15px';
 	Game.currentTc = document.getElementById('tc_' + Game.heldTool.name);
 	Game.currentTc.style.display = 'block';
-	Game.heldTool.events.tc(Game.toolContext);
+	Game.heldTool.events.tc(Game.currentTc);
 
 	Sound.init();
 	

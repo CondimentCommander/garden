@@ -10,10 +10,7 @@ Plot.tick = () => {
 	Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
 	Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
 	Graphics.prog = Plot.cycletime / Graphics.frameRate;
-	clearInterval(Graphics.timeInterval);
-	Graphics.time = Plot.cycletime / 1000 + 1;
-	Graphics.timer();
-	Graphics.timeInterval = setInterval(Graphics.timer, 1000);
+	//Graphics.time = Plot.cycletime / 1000 + 1;
 	//console.log('tick!');
 };
 Plot.stop = () => {
@@ -42,7 +39,7 @@ Plot.grow = (tile) => {
 		}
 	} else {
 		if (plant.stage == 1) {
-			if (plant.stagetime * Game.dev.fertilizer >= plant.inh.growth.matureTime) {
+			if (plant.stagetime / Game.dev.fertilizer >= plant.inh.growth.matureTime) {
 				plant.stage = 2;
 				plant.stagetime = 0;
 			}
@@ -52,7 +49,7 @@ Plot.grow = (tile) => {
 				chance -= Math.random() * 0.1
 				let rand = Math.random();
 				//console.log(rand, chance);
-				Graphics.elems[plant.sprite].op = lockValue(1.4 - chance * 4, 0, 1);
+				Graphics.elems[plant.sprite].op = lockValue(1.35 - chance * 4, 0.2, 1);
 				if (rand <= chance) Plot.decay(tile);
 			}
 		}
@@ -61,7 +58,7 @@ Plot.grow = (tile) => {
 };
 Plot.growWeed = (tile) => {
 	let plant = tile.plant;
-	let chance = 0.024 * Game.dev.fertilizer;
+	let chance = 0.012 * Game.dev.fertilizer;
 	let rand = Math.random();
 	if (rand <= chance) {
 		Plot.plant(tile, Game.plants[2]);

@@ -32,11 +32,20 @@ var Interface = {
 		Interface.toolContext = new Interface.Panel(document.getElementById('toolcontext'));
 		Interface.openFloat(Interface.toolContext);
 		Interface.inventory = new Interface.Panel(document.getElementById('inventory'));
+		Interface.settings = new Interface.Panel(document.getElementById('settings'));
 	},
 	close: (event) => {
 		Interface.closeFloat(Interface.panels[event.srcElement.parentElement.id]);
 	},
 	init: () => {
 		Interface.definePanels();
+	},
+	createImageSlice(src, x, y, w, h, ww, hh) {
+		let e = document.createElement("DIV");
+		e.style.width = w;
+		e.style.height = h;
+		e.style.background = 'url(' + src + ') ' + -(x) + ' ' + -(y);
+		e.style.backgroundSize = ww + 'px ' + hh + 'px';
+		return e;
 	}
 };

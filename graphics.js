@@ -60,6 +60,7 @@ var Graphics = {
 			if (this.lr == 0) return Graphics.bg;
 		}
 		predraw() {
+			if (this.lr == 0) Graphics.refreshBG();
 			this.canvas.globalAlpha = this.op;
 			if (this.rot != 0) this.canvas.rotate(this.rot * Math.PI / 180);
 			this.filcomp = "";
@@ -102,6 +103,7 @@ var Graphics = {
 				this.zoom = data.zoom;
 			}
 			draw() {
+				this.image = this.img.img;
 				this.canvas.resetTransform();
 				if (this.rot != 0) this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
@@ -126,6 +128,7 @@ var Graphics = {
 			}
 			draw() {
 				if (!this.img.ready) return;
+				this.image = this.img.img;
 				this.canvas.resetTransform();
 				this.canvas.translate(this.pos.x + this.scale / 2, this.pos.y + this.scale / 2);
 				this.predraw();
@@ -151,6 +154,7 @@ var Graphics = {
 				this.height = data.h;
 			}
 			draw() {
+				this.image = this.img.img;
 				this.canvas.resetTransform();
 				this.canvas.translate(this.pos.x + this.image.width / 2, this.pos.y + this.image.height / 2);
 				this.predraw();
@@ -275,7 +279,6 @@ var Graphics = {
 	},
 	refreshBG: () => {
 		Graphics.bg.clearRect(0, 0, 512, 512);
-		Graphics.bgRender = true;
 	},
 	elems: {},
 	elemLayers: [],
@@ -318,44 +321,48 @@ var Graphics = {
 		return va;
 	},
 	timer: () => {
-		Graphics.time--;
-		Graphics.timerEl.innerHTML = Graphics.time + "s";
+		Graphics.timerEl.innerHTML = Time.tickPoint + "s";
+		if (Time.tickPoint == 10) Plot.tick();
 	},
 	initial: () => {
 		Graphics.defineElements();
 		Graphics.ctx.imageSmoothingEnabled = false;
-		Graphics.ov.imageSmoothingEnabled = false;
+		Graphics.ov.imageSmoothingEnabled = true;
+		Graphics.overlay.style.imageRendering = 'high-quality';
 		Graphics.bg.imageSmoothingEnabled = false;
 		
-		Graphics.bgRender = true;
 		
 		Graphics.resources = {
 			'sprites1': new Graphics.Resource(1, 'images/sprites1.png'),
 			'bg': new Graphics.Resource(2, 'images/bg.png'),
 			'lime': new Graphics.Resource(3, 'images/lime/1.png'),
 			'lime2': new Graphics.Resource(4, 'images/lime/2.png'),
-			'grass': new Graphics.Resource(5, 'images/grassbad.png')
+			'grass': new Graphics.Resource(5, 'images/grassbad.png'),
+			'sky_day': new Graphics.Resource(6, 'images/sky_day.png'),
+			'sky_night': new Graphics.Resource(7, 'images/sky_night.png')
 		};
 		
 		for (let i = 0; i < 11; i++) {
 			Graphics.elemLayers.push({});
 		}
-		Graphics.back = new Graphics.PatternElement(0, 0, { img: Graphics.resources['bg'], w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
-		Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
+		Graphics.back = new Graphics.PatternElement(0, 0, { img: Graphics.resources['sky_night'], w: 512, h: 512, viewLayer: 0, opacity: 1.0 }).add();
+		//Graphics.interval = setInterval(Graphics.update, 1000 / Graphics.frameRate);
 		//window.requestAnimationFrame(Graphics.update);
+		Graphics.update();
+		Graphics.refreshBG();
 	},
 	update: () => {
+		window.requestAnimationFrame(Graphics.update);
 		Graphics.refresh();
 		for (let i = 0; i < 11; i++) {
 			Object.values(Graphics.elemLayers[i]).forEach((element) => {
-				if (!Graphics.bgRender && element.lr == 0) return;
+				//if (!Graphics.bgRender && element.lr == 0) return;
 				element.draw();
 			});
 		}
 		Object.values(Graphics.anims).forEach((a) => {
 			a.iterate();
 		});
-		Graphics.bgRender = false;
 	},
 	stop: () => {
 		clearInterval(Graphics.interval);

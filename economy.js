@@ -19,7 +19,8 @@ Game.inv = {
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], Game.plants[2])
+			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], Game.plants[2]),
+			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], Game.plants[3]),
 		}
 	},
 	getOwned: () => {
@@ -53,5 +54,6 @@ Game.inv = {
 		Game.inv.sect = document.getElementById('inv_items');
 		Game.inv.seeds = {};
 		Game.inv.defineItems();
+		Game.inv.items['grass_seed'].amount = 100;
 	}
 };

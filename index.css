@@ -49,12 +49,23 @@
 #ticktimer {
 	color: white;
 	opacity: 1;
-	font-size: 34pt;
-	z-index: 2;
+	font-size: 54pt;
+	z-index: 6;
 	position: absolute;
 	float: right;
 	bottom: 10px;
-	margin-left: 8px;
+	margin-left: 0px;
+	background-color: Brown;
+	border-style: solid;
+	border-radius: 100px;
+	border-bottom-left-radius: 100px;
+	padding: 2%;
+	width: 7%;
+	height: 10%;
+	overflow: hidden;
+}
+#ticktimer::first-line {
+	margin: auto;
 }
 #farmview {
 	width: 100vh;
@@ -159,10 +170,16 @@
 	image-rendering: pixelated;
 	box-sizing: border-box;
 }
+.bar_button_text {
+	margin: 0px;
+	display: inline-block;
+	vertical-align: text-top;
+	user-select: none;
+}
 
 .barimg {
 	margin: auto;
-	display: block;
+	display: inline-block;
 }
 
 .section {

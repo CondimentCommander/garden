@@ -8,9 +8,10 @@ Game.tools = [
 	}, unhov: (tile, x, y) => {
 		Graphics.elems[Game.heldTool.text].op = 0;
 		Game.heldTool.info = '';
+		clearChildren(Game.currentTc);
 	}, chhov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.name + '\n' + tile.plant.grows + tile.plant.stage;
-		Game.heldTool.info = [tile.plant.plant.name, tile.plant.inh.growth.stages[0].img.img.src, tile.plant.grows, tile.plant.stage];
+		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.dn + '\n' + tile.plant.grows + tile.plant.stage;
+		Game.heldTool.info = [tile.plant.plant.dn, tile.plant.inh.growth.stages[tile.plant.grows], tile.plant.grows, tile.plant.stage, tile.plant.plant.id];
 		Game.tcInspectUpdate(Game.currentTc);
 		if (tile.plant.plant.id == 1) {
 			Graphics.elems[Game.heldTool.text].op = 0;
@@ -79,18 +80,19 @@ Game.tools = [
 ];
 
 Game.changeTool = (t) => {
+	if (Game.heldTool == Game.tools[t]) return;
 	Game.heldTool.events.swap();
 	let prev = Game.heldTool;
 	Game.heldTool = Game.tools[t];
 	Game.heldTool.events.init();
 	Plot.farm.style.cursor = 'url(' + Game.heldTool.icon + '),auto';
-	document.getElementById('tool_' + Game.tools[t].name).style.width = '60px';
-	document.getElementById('tool_' + Game.tools[t].name).firstElementChild.style.marginLeft = '15px';
+	document.getElementById('tool_' + Game.heldTool.name).style.width = '60px';
+	document.getElementById('tool_' + Game.heldTool.name).firstElementChild.style.marginLeft = '15px';
 	document.getElementById('tool_' + prev.name).style.width = '48px';
 	document.getElementById('tool_' + prev.name).firstElementChild.style.marginLeft = '0px';
 	document.getElementById('tc_' + prev.name).style.display = 'none';
-	Game.currentTc = document.getElementById('tc_' + Game.tools[t].name);
-	document.getElementById('tc_' + Game.tools[t].name) = 'block';
+	Game.currentTc = document.getElementById('tc_' + Game.heldTool.name);
+	document.getElementById('tc_' + Game.heldTool.name).style.display = 'block';
 	Game.heldTool.events.tc(Game.currentTc);
 };
 Game.toolsInit = () => {
@@ -106,11 +108,13 @@ Game.tcPlantClick = (event) => {
 };
 Game.tcInspectUpdate = (el) => {
 	clearChildren(el);
-	if (Game.heldTool.info == '') return;
-	let img = document.createElement("IMG");
-	img.src = Game.heldTool.info[1];
-	img.width = 32;
-	img.height = 32;
+	if (Game.heldTool.info == '' || Game.heldTool.info[4] == 1) return;
+	//let img = document.createElement("IMG");
+	//img.src = Game.heldTool.info[1];
+	//img.width = 32;
+	//img.height = 32;
+	let i = Game.heldTool.info[1];
+	let img = Interface.createImageSlice(i.img.src, i.sx, i.sy, i.sa, i.sa, 48, 48);
 	let text1 = document.createTextNode(Game.heldTool.info[0]);
 	let div1 = document.createElement("DIV");
 	div1.appendChild(text1);

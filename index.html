@@ -7,6 +7,7 @@
 	<script src="graphics.js"></script>
 	<script src="plot.js"></script>
 	<script src="index.js"></script>
+	<script src="time.js"></script>
 	<script src="input.js"></script>
 	<script src="util.js"></script>
 	<script src="growth.js"></script>
@@ -30,6 +31,13 @@
 		<div class="panel_x" onclick="Interface.close(event)"></div>
 		<div id="inv_items">
 
+		</div>
+	</div>
+	<div class="float_panel panel" id="settings" data-fill="main">
+		<div class="panel_x" onclick="Interface.close(event)"></div>
+		<div id="setwrap">
+			<h3>Developer</h3>
+			<div class="setting"><p>Fertilizer</p></div>
 		</div>
 	</div>
 	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
@@ -65,7 +73,8 @@
 		</div>
 	</div>
 	<div class="section" id="right_bar">
-		<div class="bar_button" onclick="Game.inv.genInv(); Interface.openFloat(Interface.inventory);"><img class="barimg" src="images/bag.png" width="64px" height="64px"></div>
+		<div class="bar_button" onclick="Game.inv.genInv(); Interface.openFloat(Interface.inventory);"><img class="barimg" src="images/bag.png" width="64px" height="64px"> <p class="bar_button_text">Inventory</p></div>
+		<div class="bar_button" onclick="Interface.openFloat(Interface.settings);"><img class="barimg" src="images/gear.png" width="64px" height="64px"> <p class="bar_button_text">Settings</p></div>
 	</div>
 	<div class="section" id="seeds" onmouseup="Game.panStop(event)">
 		

@@ -48,3 +48,16 @@ function clearChildren(elem) {
 		elem.removeChild(elem.firstChild);
 	}
 }
+function chance(c) {
+	let rand = Math.random();
+	return rand <= chance;
+}
+function weightedChance(weights) {
+	let v = Object.values(weights);
+	let k = Object.keys(weights).map(e => {return parseInt(e)});
+	let sum = k.reduce((s, e) => {return s});
+	//let w = k.map(e => {return e / sum});
+	while (found) {
+
+	}
+}
