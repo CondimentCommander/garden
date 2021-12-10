@@ -50,14 +50,22 @@ function clearChildren(elem) {
 }
 function chance(c) {
 	let rand = Math.random();
-	return rand <= chance;
+	return rand <= c;
+}
+function chanceChoose(array) {
+	let rand = Math.random();
+	let num = Math.floor(rand * (array.length - 0.1));
+	return num;
 }
 function weightedChance(weights) {
 	let v = Object.values(weights);
 	let k = Object.keys(weights).map(e => {return parseInt(e)});
-	let sum = k.reduce((s, e) => {return s});
-	//let w = k.map(e => {return e / sum});
-	while (found) {
-
+	let sum = k.reduce((s, e) => {return s + e});
+	let out = undefined;
+	while (out == undefined) {
+		let rand = Math.random() * sum;
+		let choice = chanceChoose(v);
+		if (rand <= k[choice]) out = v[choice];
 	}
+	return out;
 }

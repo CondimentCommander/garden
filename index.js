@@ -50,14 +50,37 @@ var Game = {
 	},
 	init: () => {
 		Game.plants = [
-			new Game.Plant('test', 0, 'Test').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: Graphics.resources['lime2'], sa: 2, opacity: 1, viewLayer: 3 }, { img: Graphics.resources['lime'], s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }]}).setinh(),
-			new Game.Plant('empty', 1, 'None').setGrowth({speed: 0, matureTime: 5, decay: 1, stages: [{ img: Graphics.resources['grass'], sa: 2, opacity: 0, viewLayer: 3 }]}).addEvent('harvest', (tile) => {}).setinh(),
-			new Game.Plant('grass', 2, 'Grass').setGrowth({speed: 2, matureTime: 5, decay: 1, stages: [{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }]}).setinh(),
-			new Game.Plant('cornweed', 3, 'Cornweed').setGrowth({ speed: 3, matureTime: 2, decay: 0.9, stages: [{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 0, sy: 0, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 0, slsa: 32 }, { img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 0, slsa: 32 }] }).setinh()
+			new Game.Plant('test', 0, 'Test').setGrowth({ 
+				speed: 2, matureTime: 5, decay: 1, stages: [
+					{ img: Graphics.resources['lime2'], sa: 2, opacity: 1, viewLayer: 3 }, 
+					{ img: Graphics.resources['lime'], s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }
+				] 
+			}).setinh(),
+			new Game.Plant('empty', 1, 'None').setGrowth({ 
+				speed: 0, matureTime: 5, decay: 1, stages: [
+					{ img: Graphics.resources['grass'], sa: 2, opacity: 0, viewLayer: 3 }
+				]
+			}).addEvent('harvest', (tile) => { }).setinh(),
+			new Game.Plant('grass', 2, 'Grass').setGrowth({
+				speed: 2, matureTime: 5, decay: 1, stages: [
+					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 },
+					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, 
+					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }
+				], mutations: {
+					'10': 3
+				}
+			}).setinh(),
+			new Game.Plant('cornweed', 3, 'Cornweed').setGrowth({
+				speed: 3, matureTime: 2, decay: 0.9, stages: [
+					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 0, sy: 0, slsa: 32 }, 
+					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 0, slsa: 32 }, 
+					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 0, slsa: 32 }
+				]
+			}).setinh()
 		];
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 		Game.inv.init();
-		Plot.weeds = {'9': Game.plants[2], '1': Game.plants[3]};
+		Plot.weeds = {'7': Game.plants[2], '1': Game.plants[3]};
 	},
 	dev: {
 		fertilizer: 4,

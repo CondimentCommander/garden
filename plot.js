@@ -46,12 +46,22 @@ var Plot = {
 	},
 	uproot: (tile) => {
 		if (Graphics.elems[tile.plant.sprite] == null) return;
-		Graphics.elems[tile.plant.sprite].remove();
-		tile.plant = new Plot.PlantTile(Game.plants[1], tile);
+		Plot.plant(tile, Game.plants[1]);
 	},
 	plant: (tile, plant) => {
 		Graphics.elems[tile.plant.sprite].remove();
 		tile.plant = new Plot.PlantTile(plant, tile);
+	},
+	replace: (tile, plant) => {
+		let grows = tile.plant.grows;
+		let stage = tile.plant.stage;
+		let life = tile.plant.life;
+		let stagetime = tile.plant.stagetime;
+		Plot.plant(tile, plant);
+		tile.plant.grows = grows;
+		tile.plant.stage = stage;
+		tile.plant.life = life;
+		tile.plant.stagetime = stagetime;
 	},
 	render: () => {
 		let ps = Graphics.screenInfo().ps;

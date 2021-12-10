@@ -9,6 +9,7 @@ Plot.execute = (func) => {
 Plot.tick = () => {
 	Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
 	Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
+	//Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.growWeed(tile)});
 	Graphics.prog = Plot.cycletime / Graphics.frameRate;
 	//Graphics.time = Plot.cycletime / 1000 + 1;
 	//console.log('tick!');
@@ -23,34 +24,32 @@ Plot.grow = (tile) => {
 	if (plant.inh.growth.speed == 0) return;
 	let length = plant.inh.growth.stages.length - 1;
 	if (plant.stage == 0) {
-		let chance = plant.inh.growth.speed * 0.028 * Game.dev.fertilizer;
+		let c = plant.inh.growth.speed * 0.028 * Game.dev.fertilizer;
 		let dbchance = plant.inh.growth.speed * 0.006 * Game.dev.fertilizer;
-		let rand = Math.random();
-		if (rand <= chance) {
-			if (rand <= dbchance) plant.grows += 2;
-			if (rand > dbchance) plant.grows++;
+		if (chance(c)) {
+			let db = chance(dbchance);
+			if (db) plant.grows += 2;
+			if (!db) plant.grows++;
 			if (plant.grows >= length) {
 				plant.stage = 1;
 				plant.stagetime = 0;
 				plant.grows = length;
 				Plot.mutate(tile);
 			}
-			Graphics.elems[plant.sprite].replace(Graphics.fromData(plant.inh.growth.stages[plant.grows], tile.x, tile.y));
+			Graphics.elems[tile.plant.sprite].replace(Graphics.fromData(tile.plant.inh.growth.stages[tile.plant.grows], tile.x, tile.y));
 		}
 	} else {
 		if (plant.stage == 1) {
-			if (plant.stagetime / Game.dev.fertilizer >= plant.inh.growth.matureTime) {
+			if (plant.stagetime * Game.dev.fertilizer >= plant.inh.growth.matureTime) {
 				plant.stage = 2;
 				plant.stagetime = 0;
 			}
 		} else {
 			if (plant.stage == 2) {
-				let chance = plant.inh.growth.speed * 0.003 * plant.inh.growth.decay * Math.pow(plant.stagetime, 1.5);
-				chance -= Math.random() * 0.1
-				let rand = Math.random();
-				//console.log(rand, chance);
-				Graphics.elems[plant.sprite].op = lockValue(1.35 - chance * 4, 0.2, 1);
-				if (rand <= chance) Plot.decay(tile);
+				let c = plant.inh.growth.speed * 0.003 * plant.inh.growth.decay * Math.pow(plant.stagetime, 1.5);
+				c -= Math.random() * 0.1
+				Graphics.elems[plant.sprite].op = lockValue(1.35 - c * 4, 0.2, 1);
+				if (chance(c)) Plot.decay(tile);
 			}
 		}
 	}
@@ -58,14 +57,20 @@ Plot.grow = (tile) => {
 };
 Plot.growWeed = (tile) => {
 	let plant = tile.plant;
-	let chance = 0.012 * Game.dev.fertilizer;
-	let rand = Math.random();
-	if (rand <= chance) {
-		Plot.plant(tile, Game.plants[2]);
+	if (chance(0.015 * Game.dev.fertilizer)) {
+		let weed = weightedChance(Plot.weeds);
+		if (plant.plant.id != 1) {
+			if (weed.name != 'rankweed') return;
+		}
+		Plot.plant(tile, weed);
 	}
 };
 Plot.mutate = (tile) => {
-	
+	if (tile.plant.inh.growth.mutations == undefined) return;
+	if (chance(0.005 * Game.dev.fertilizer)) {
+		let mut = Game.plants[weightedChance(tile.plant.inh.growth.mutations)];
+		Plot.replace(tile, mut);
+	}
 };
 Plot.crossBreed = (tile) => {
 	let si = Graphics.screenInfo();
