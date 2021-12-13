@@ -33,6 +33,7 @@ var Time = {
                 Graphics.refreshBG();
             }
         }
+        if (Tooltip.focus == Graphics.timerEl) Tooltip.ttUpdate(Tooltip.buildTime());
         //Graphics.elems[Graphics.back].op = light;
         //Graphics.refreshBG();
     },

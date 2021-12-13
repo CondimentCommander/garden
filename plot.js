@@ -118,8 +118,14 @@ var Plot = {
 				let x = (t.x - Plot.pos.x) / 2 + Plot.pos.x;
 				let y = (t.y - Plot.pos.y) / 2 + Plot.pos.y;
 				let r = randRot();
-				Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32, rot: Graphics.elems[t.sprite].rot, tag: 'tile' }));
+				Graphics.elems[t.sprite].pos.x = x;
+				Graphics.elems[t.sprite].pos.y = y;
+				Graphics.elems[t.sprite].scale = Plot.zoom / 2;
+				Graphics.elems[t.sprite].slicescale = Plot.zoom / 32;
+				//Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32, rot: Graphics.elems[t.sprite].rot, tag: 'tile' }));
+				let oldop = Graphics.elems[t.plant.sprite].op;
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], x, y));
+				Graphics.elems[t.plant.sprite].op = oldop;
 			});
 		}
 		Object.values(Graphics.elems).filter((e) => {return e.zoom}).forEach((e) => {e.scale /= diff; e.slicescale = Plot.zoom / 32});

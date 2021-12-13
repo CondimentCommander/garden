@@ -15,6 +15,7 @@
 	<script src="economy.js"></script>
 	<script src="panels.js"></script>
 	<script src="audio.js"></script>
+	<script src="tooltips.js"></script>
 	
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +23,11 @@
 </head>
 <body onload="start();" onresize="Plot.changeZoom(Plot.zoom);" onmousemove="say(event)">
 	<canvas class="canvas" id="overlay" width="2048" height="1024"></canvas>
+	<div id="ttwrap">
+		<div id="tooltip">
+
+		</div>
+	</div>
 	<div class="float_panel panel" id="test" data-fill="main"></div>
 	<div id="dim" onclick="Interface.closeFloat(Interface.activeFloat)"></div>
 	<div class="float_panel panel" id="welcome" data-fill="main">
@@ -48,16 +54,16 @@
 		</div>
 		<canvas class="canvas" id="bg" width="512" height="512"></canvas>
 		<canvas class="canvas" id="can" width="512" height="512"></canvas>
-		<div id="ticktimer"></div>
+		<div id="ticktimer" onmouseenter="Tooltip.tt(event, Tooltip.buildTime(), -8, -8, '')" onmousemove="Tooltip.ttMove(event, -8, -8, '')" onmouseleave="Tooltip.ttClose()"></div>
 		<div id="toolbar">
-			<div id="tool_Inspect" class="toolbar_button">
-				<img src="images/glass.png" width="48px" height="48px" onclick="Game.changeTool(0)">
+			<div id="tool_Inspect" class="toolbar_button" onclick="Game.changeTool(0)" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools[0]), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
+				<img src="images/glass.png" width="48px" height="48px">
 			</div>
-			<div id="tool_Plant" class="toolbar_button">
-				<img src="images/lime/2.png" width="48px" height="48px" onclick="Game.changeTool(2)">
+			<div id="tool_Plant" class="toolbar_button" onclick="Game.changeTool(1)" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools[1]), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
+				<img src="images/lime/2.png" width="48px" height="48px">
 			</div>
-			<div id="tool_Harvest" class="toolbar_button">
-				<img src="images/lime/1.png" width="48px" height="48px" onclick="Game.changeTool(1)">
+			<div id="tool_Harvest" class="toolbar_button" onclick="Game.changeTool(2)" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools[2]), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
+				<img src="images/sickle.png" width="48px" height="48px">
 			</div>
 		</div>
 		<div id="toolcontext" class="float_panel panel top">
@@ -65,7 +71,7 @@
 
 			</div>
 			<div id="tc_Harvest" class="tc">
-				harvest
+				
 			</div>
 			<div id="tc_Inspect" class="tc">
 				

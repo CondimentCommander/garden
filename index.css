@@ -40,6 +40,9 @@
 	cursor: pointer;
 	border-color: #704426;
 }
+.toolbar_button > img {
+	pointer-events: none;
+}
 .toolbar_button:hover {
 	background-color: #1f7a15;
 }
@@ -202,12 +205,26 @@
 	overflow: hidden;
 	border-color: #704426;
 }
+#tooltip {
+	background-color: #704426;
+	color: white;
+	border-style: solid;
+	border-radius: 12px;
+	padding: 12px;
+}
+#ttwrap {
+	display: none;
+	position: fixed;
+	z-index: 14;
+	pointer-events: none;
+}
 body {
 	margin: 0px;
 	height: 100vh;
 	font-family: 'Rubik', sans-serif;
 	background-image: url("images/bg.png");
 	background-color: #1f7a15;
+	image-rendering: pixelated;
 }
 .canvas {
 	image-rendering: pixelated;

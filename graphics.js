@@ -239,6 +239,9 @@ var Graphics = {
 						if (this.rem) this.remove();
 					}
 				}
+				if (this.v <= this.scale && this.direction == -1 && this.motion != 'zig_s' && this.motion != 'zig') {
+					if (this.rem) this.remove();
+				}
 				
 				Graphics.elems[this.value[0]][this.value[1]] = this.v;
 			}
@@ -322,7 +325,7 @@ var Graphics = {
 		return va;
 	},
 	timer: () => {
-		Graphics.timerEl.innerHTML = Time.tickPoint + "s";
+		Graphics.timerEl.innerHTML = Time.tickPoint;
 		if (Time.tickPoint == 10) Plot.tick();
 	},
 	initial: () => {

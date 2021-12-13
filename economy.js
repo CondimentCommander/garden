@@ -1,26 +1,28 @@
 Game.inv = {
 	balance: 0,
 	Item: class {
-		constructor(name, id, icon, categories) {
+		constructor(name, id, icon, categories, desc, lore) {
 			this.name = name;
 			this.id = id;
 			this.icon = icon;
 			this.cat = categories;
+			this.desc = desc;
+			this.lore = lore;
 			this.amount = 0;
 		}
 	},
 	defineItems: () => {
 		Game.inv.Seed = class extends Game.inv.Item {
-			constructor(name, id, icon, categories, plant) {
-				super(name, id, icon, categories);
+			constructor(name, id, icon, categories, lore, plant) {
+				super(name, id, icon, categories, 'A seed that can be planted in the plot', lore);
 				this.plant = plant;
 				this.cat.push('Seed');
 				Game.inv.seeds[this.id] = this;
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], Game.plants[2]),
-			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], Game.plants[3]),
+			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], 'The most common seed around. You almost have too much...', Game.plants[2]),
+			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], 'Try it popped!', Game.plants[3]),
 		}
 	},
 	getOwned: () => {
@@ -47,6 +49,9 @@ Game.inv = {
 			amtd.appendChild(amt);
 			elem.appendChild(img);
 			elem.appendChild(amtd);
+			elem.onmouseenter = 'Tooltip.tt(event, Tooltip.buildItem(event, ' + gen[i] + ']), 0, 0, \'\')';
+			elem.onmousemove = 'Tooltip.ttMove(event, 0, 0, \'\'';
+			elem.onmouseleave = 'Tooltip.ttClose()';
 			Game.inv.sect.appendChild(elem);
 		}
 	},

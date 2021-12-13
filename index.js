@@ -80,7 +80,7 @@ var Game = {
 		];
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
 		Game.inv.init();
-		Plot.weeds = {'7': Game.plants[2], '1': Game.plants[3]};
+		Plot.weeds = {'15': Game.plants[2], '1': Game.plants[3]};
 	},
 	dev: {
 		fertilizer: 4,
@@ -116,8 +116,8 @@ function start() {
 	Graphics.setPos(Plot.tb, Plot.pos.x / si.ps * si.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / si.ps * si.ts + 8);
 	
 
-	Time.init();
 	Graphics.timerEl = document.getElementById('ticktimer');
+	Time.init();
 	Graphics.timer();
 	Graphics.timeInterval = setInterval(Graphics.timer, 1000);
 
@@ -132,6 +132,7 @@ function start() {
 	Game.heldTool.events.tc(Game.currentTc);
 
 	Sound.init();
+	Tooltip.init();
 	
 	if (Game.dev.showWelcome) {
 		let panel = new Interface.Panel(document.getElementById('welcome'));

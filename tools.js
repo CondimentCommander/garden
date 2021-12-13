@@ -30,53 +30,58 @@ Game.tools = [
 	}, tc: (el) => {
 		Game.tcInspectUpdate(el);
 	}}),
-	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/lime/1.png', {click: (tile, x, y) => {
-		tile.plant.inh.events.harvest(tile);
-	}}),
-	new Game.Tool('Plant', 'Plant seeds on farmland', 'images/plant.cur', {hov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.sprite].op = 0.5;
-	}, unhov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.sprite].op = 0;
-	}, chhov: (tile, x, y) => {
-		if (Game.heldTool.sprite == undefined) return;
-		if (tile.plant.plant.id != 1) {
-			Graphics.elems[Game.heldTool.sprite].op = 0;
-		} else {
+	new Game.Tool('Plant', 'Plant seeds on farmland', 'images/plant.cur', {
+		hov: (tile, x, y) => {
 			Graphics.elems[Game.heldTool.sprite].op = 0.5;
+		}, unhov: (tile, x, y) => {
+			Graphics.elems[Game.heldTool.sprite].op = 0;
+		}, chhov: (tile, x, y) => {
+			if (Game.heldTool.sprite == undefined) return;
+			if (tile.plant.plant.id != 1) {
+				Graphics.elems[Game.heldTool.sprite].op = 0;
+			} else {
+				Graphics.elems[Game.heldTool.sprite].op = 0.5;
+			}
+			let pos = [tile.x, tile.y];
+			let con = pos;
+			Graphics.elems[Game.heldTool.sprite].pos = { x: con[0], y: con[1] };
+		}, move: (x, y) => {
+
+		}, click: (tile, x, y) => {
+			let seed = Game.inv.items[Game.heldTool.plant.name + '_seed'];
+			if (tile.plant.plant.id != 1 || seed.amount <= 0) return;
+			Plot.plant(tile, Game.heldTool.plant);
+			seed.amount--;
+		}, init: () => {
+			Game.heldTool.plant = Game.plants[2];
+			//Game.heldTool.sprite = new Graphics.SpriteElement(0, 0, { img: Game.plants[2].growth.stages[0].img, s: Graphics.converta(16, ), opacity: 1, viewLayer: 6 }).add();
+			Game.heldTool.sprite = Graphics.fromData(Game.plants[2].growth.stages[0], 0, 0, true).add();
+			Graphics.elems[Game.heldTool.sprite].op = 0;
+			Graphics.elems[Game.heldTool.sprite].zoom = true;
+		}, swap: () => {
+			Graphics.elems[Game.heldTool.sprite].remove();
+		}, tc: (el) => {
+			console.log('d');
+			let owned = Game.inv.getOwned();
+			clearChildren(el);
+			let seeds = owned.filter((a) => { return a.cat.includes('seed') });
+			seeds.forEach((a) => {
+				let img = document.createElement("IMG");
+				img.src = a.icon;
+				img.width = 48;
+				img.height = 48;
+				img.onclick = Game.tcPlantClick;
+				img.dataset.seed = a.id;
+				let div = document.createElement("DIV");
+				div.className = 'tcplantseed';
+				div.id = 'tcpseed_' + a.id;
+				div.appendChild(img);
+				el.appendChild(div);
+			});
 		}
-		let pos = [tile.x, tile.y];
-		let con = pos;
-		Graphics.elems[Game.heldTool.sprite].pos = { x: con[0], y: con[1] };
-	}, move: (x, y) => {
-		
-	}, click: (tile, x, y) => {
-		Plot.plant(tile, Game.heldTool.plant);
-	}, init: () => {
-		Game.heldTool.plant = Game.plants[2];
-		//Game.heldTool.sprite = new Graphics.SpriteElement(0, 0, { img: Game.plants[2].growth.stages[0].img, s: Graphics.converta(16, ), opacity: 1, viewLayer: 6 }).add();
-		Game.heldTool.sprite = Graphics.fromData(Game.plants[2].growth.stages[0], 0, 0, true).add();
-		Graphics.elems[Game.heldTool.sprite].op = 0;
-		Graphics.elems[Game.heldTool.sprite].zoom = true;
-	}, swap: () => {
-		Graphics.elems[Game.heldTool.sprite].remove();
-	}, tc: (el) => {
-		console.log('d');
-		let owned = Game.inv.getOwned();
-		clearChildren(el);
-		let seeds = owned.filter((a) => {return a.cat.includes('seed')});
-		seeds.forEach((a) => {
-			let img = document.createElement("IMG");
-			img.src = a.icon;
-			img.width = 48;
-			img.height = 48;
-			img.onclick = Game.tcPlantClick;
-			img.dataset.seed = a.id;
-			let div = document.createElement("DIV");
-			div.className = 'tcplantseed';
-			div.id = 'tcpseed_' + a.id;
-			div.appendChild(img);
-			el.appendChild(div);
-		});
+	}),
+	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/sickle.cur', {click: (tile, x, y) => {
+		tile.plant.inh.events.harvest(tile);
 	}})
 ];
 
@@ -100,9 +105,7 @@ Game.toolsInit = () => {
 	Game.toolContext = document.getElementById('toolcontext');
 };
 Game.tcPlantClick = (event) => {
-	console.log(event.srcElement);
-	let plant = Game.inv.items[event.srcElement.dataset.seed].plant.id;
-	console.log(plant);
+	let plant = Game.inv.items[event.target.dataset.seed].plant.id;
 	Game.heldTool.plant = Game.plants[plant];
 	Graphics.elems[Game.heldTool.sprite].replace(Graphics.fromData(Game.plants[plant].growth.stages[0]));
 	Graphics.elems[Game.heldTool.sprite].op = 0;
