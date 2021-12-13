@@ -67,7 +67,7 @@ Game.panMove = (event) => {
 		if (calcY > ss - Plot.height * ts) Plot.farm.style.borderBottomColor = 'blue';
 		
 		Plot.pos = { x: Math.round(calcX / ts - 0.5) * (Plot.zoom / 2), y: Math.round(calcY / ts - 0.5) * (Plot.zoom / 2)};
-		calcX = Math.round(calcX / ts - 0.5) * ts + 8 + margin + 0.5;
+		calcX = Math.round(calcX / ts - 0.5) * ts + 8 + margin;
 		calcY = Math.round(calcY / ts - 0.5) * ts + 8;
 		Graphics.setPos(Plot.tb, calcX, calcY);
 		Plot.move();

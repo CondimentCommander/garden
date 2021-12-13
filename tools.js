@@ -11,7 +11,7 @@ Game.tools = [
 		clearChildren(Game.currentTc);
 	}, chhov: (tile, x, y) => {
 		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.dn + '\n' + tile.plant.grows + tile.plant.stage;
-		Game.heldTool.info = [tile.plant.plant.dn, tile.plant.inh.growth.stages[tile.plant.grows], tile.plant.grows, tile.plant.stage, tile.plant.plant.id];
+		Game.heldTool.info = [tile.plant.plant.dn, tile.plant.inh.growth.stages[tile.plant.grows], tile.plant.grows, tile.plant.stage, tile.plant.plant.id, Game.inv.items[tile.plant.plant.name + '_seed']];
 		Game.tcInspectUpdate(Game.currentTc);
 		if (tile.plant.plant.id == 1) {
 			Graphics.elems[Game.heldTool.text].op = 0;
@@ -73,6 +73,7 @@ Game.tools = [
 			img.dataset.seed = a.id;
 			let div = document.createElement("DIV");
 			div.className = 'tcplantseed';
+			div.id = 'tcpseed_' + a.id;
 			div.appendChild(img);
 			el.appendChild(div);
 		});
@@ -101,6 +102,7 @@ Game.toolsInit = () => {
 Game.tcPlantClick = (event) => {
 	console.log(event.srcElement);
 	let plant = Game.inv.items[event.srcElement.dataset.seed].plant.id;
+	console.log(plant);
 	Game.heldTool.plant = Game.plants[plant];
 	Graphics.elems[Game.heldTool.sprite].replace(Graphics.fromData(Game.plants[plant].growth.stages[0]));
 	Graphics.elems[Game.heldTool.sprite].op = 0;
@@ -109,14 +111,17 @@ Game.tcPlantClick = (event) => {
 Game.tcInspectUpdate = (el) => {
 	clearChildren(el);
 	if (Game.heldTool.info == '' || Game.heldTool.info[4] == 1) return;
-	//let img = document.createElement("IMG");
-	//img.src = Game.heldTool.info[1];
-	//img.width = 32;
-	//img.height = 32;
+	let img = document.createElement("IMG");
+	img.src = Game.heldTool.info[5].icon;
+	img.width = 32;
+	img.height = 32;
+	img.style.display = 'inline-block';
+	img.style.imageRendering = 'pixelated';
 	let i = Game.heldTool.info[1];
-	let img = Interface.createImageSlice(i.img.src, i.sx, i.sy, i.sa, i.sa, 48, 48);
+	//let img = Interface.createImageSlice(i.img.src, i.sx, i.sy, i.sa, i.sa, 48, 48);
 	let text1 = document.createTextNode(Game.heldTool.info[0]);
 	let div1 = document.createElement("DIV");
+	div1.style.display = 'inline-block';
 	div1.appendChild(text1);
 	el.appendChild(img);
 	el.appendChild(div1);

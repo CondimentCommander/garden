@@ -20,6 +20,8 @@ var Time = {
         Time.timeSeason = Time.timeDay / Time.seasonInterval;
         Time.tickPoint = 10 - (Time.timeSecond % Time.tickInterval);
         Time.dayPoint = Time.timeTick % Time.dayInterval;
+
+        //let light = Math.abs(Time.dayPoint - 30) / 30;
         if (Time.dayPoint >= 15 && Time.dayPoint < 45) {
             if (Graphics.elems[Graphics.back].img.src != 'images/sky_night.png') {
                 Graphics.elems[Graphics.back].img = Graphics.resources['sky_night'];
@@ -31,5 +33,7 @@ var Time = {
                 Graphics.refreshBG();
             }
         }
+        //Graphics.elems[Graphics.back].op = light;
+        //Graphics.refreshBG();
     },
 };

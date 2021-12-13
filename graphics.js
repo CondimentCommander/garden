@@ -262,6 +262,7 @@ var Graphics = {
 		let rect = elem.getBoundingClientRect();
 		elem.style.left = x + 'px';
 		elem.style.top = y + 'px';
+		//elem.style.transform = 'translateX(' + x + 'px) translateY(' + y + ')';
 	},
 	screenInfo: () => {
 		let pixelsize = Plot.zoom / 2;

@@ -55,5 +55,6 @@ Game.inv = {
 		Game.inv.seeds = {};
 		Game.inv.defineItems();
 		Game.inv.items['grass_seed'].amount = 100;
+		Game.inv.items['cornweed_seed'].amount = 10;
 	}
 };

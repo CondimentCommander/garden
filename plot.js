@@ -131,8 +131,8 @@ var Plot = {
 
 			} else {
 				if (fix) {
-					Plot.pos.x += snapValue(Plot.width / 2 * info.ps, info.ps);
-					Plot.pos.y += snapValue(Plot.height / 2 * info.ps, info.ps);
+					Plot.pos.x += snapValue((Plot.width / 2 + 1) * info.ps, info.ps);
+					Plot.pos.y += snapValue((Plot.height / 2 + 1) * info.ps, info.ps);
 					if (Plot.width % 2 == 1) Plot.pos.x += snapValue((Plot.width / 2) * info.ps, info.ps);
 					if (Plot.height % 2 == 1) Plot.pos.y += snapValue((Plot.height / 2) * info.ps, info.ps);
 				} else {
@@ -143,6 +143,12 @@ var Plot = {
 		}
 		Plot.move();
 		Graphics.setPos(Plot.tb, Plot.pos.x / info.ps * info.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / info.ps * info.ts + 8);
+		Plot.farm.style.borderColor = 'black';
+
+		if (Plot.pos.x < 0) Plot.farm.style.borderLeftColor = 'blue';
+		if (Plot.pos.x > 512 - Plot.width * info.ps) Plot.farm.style.borderRightColor = 'blue';
+		if (Plot.pos.y < 0) Plot.farm.style.borderTopColor = 'blue';
+		if (Plot.pos.y > 512 - Plot.height * info.ps) Plot.farm.style.borderBottomColor = 'blue';
 		if (Game.heldTool != undefined) Game.heldTool.events.move(Game.mousePos[0], Game.mousePos[1]);
 	},
 	renderUpdate: () => {
