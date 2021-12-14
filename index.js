@@ -32,6 +32,14 @@ var Game = {
 			s.s = Plot.zoom / s.sa;
 		}
 	},
+	Soil: class {
+		constructor(name, dn, img, events) {
+			this.name = name;
+			this.dn = dn;
+			this.img = img;
+			this.events = events;
+		}
+	},
 	Tool: class {
 		constructor(name, desc, icon, events) {
 			this.name = name;
@@ -79,6 +87,10 @@ var Game = {
 			}).setinh()
 		];
 		Game.plants.forEach((p) => {Game.scalePlant(p)});
+		Game.soils = {
+			'rough': new Game.Soil('rough', 'Rough Soil', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 0, sls: Plot.zoom / 32, tag: 'tile' }),
+			'farmland': new Game.Soil('farmland', 'Farmland', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 16, sls: Plot.zoom / 32, tag: 'tile' })
+		};
 		Game.inv.init();
 		Plot.weeds = {'15': Game.plants[2], '1': Game.plants[3]};
 	},

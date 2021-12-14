@@ -113,5 +113,10 @@ var Tooltip = {
         e.appendChild(sdiv);
         e.appendChild(gdiv);
         return e;
+    },
+    buildSeed: (seed) => {
+        let e = Tooltip.buildItem(seed);
+        e.appendChild(document.createTextNode('Owned: ' + seed.amount));
+        return e;
     }
 };

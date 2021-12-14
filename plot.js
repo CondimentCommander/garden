@@ -15,7 +15,7 @@ var Plot = {
 				//cell.onclick = Game.clickTile;
 				//cell.onmouseover = Game.hoverTile;
 				//cell.onmouseout = Game.hoverOffTile;
-				Plot.tiles[i].push(new Plot.Tile(j * ps * 2, i * ps * 2, 0));
+				Plot.tiles[i].push(new Plot.Tile(j * ps * 2, i * ps * 2, Game.soils['rough']));
 				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[1], Plot.tiles[i][j]);
 			}
 		}
@@ -68,7 +68,10 @@ var Plot = {
 		for (let i = 0; i < Plot.height; i++) {
 			for (let j = 0; j < Plot.width; j++) {
 				let r = randRot();
-				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: Plot.zoom / 2, sls: Plot.zoom / 32, rot: r, tag: 'tile' }).add();
+				let pr = randRotHorizontal();
+				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, Game.soils['rough'].img).add();
+				Graphics.elems[Plot.tiles[i][j].sprite].rot = r;
+				Graphics.elems[Plot.tiles[i][j].plant.sprite].rot = pr;
 			}
 		}
 		Plot.edge = [];
@@ -117,15 +120,16 @@ var Plot = {
 			Plot.tiles[i].forEach((t) => {
 				let x = (t.x - Plot.pos.x) / 2 + Plot.pos.x;
 				let y = (t.y - Plot.pos.y) / 2 + Plot.pos.y;
-				let r = randRot();
 				Graphics.elems[t.sprite].pos.x = x;
 				Graphics.elems[t.sprite].pos.y = y;
 				Graphics.elems[t.sprite].scale = Plot.zoom / 2;
 				Graphics.elems[t.sprite].slicescale = Plot.zoom / 32;
 				//Graphics.elems[t.sprite].replace(new Graphics.SpriteElement(x, y, { img: Graphics.resources['sprites1'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 32, sls: Plot.zoom / 32, rot: Graphics.elems[t.sprite].rot, tag: 'tile' }));
 				let oldop = Graphics.elems[t.plant.sprite].op;
+				let oldrot = Graphics.elems[t.plant.sprite].rot;
 				Graphics.elems[t.plant.sprite].replace(Graphics.fromData(t.plant.inh.growth.stages[t.plant.grows], x, y));
 				Graphics.elems[t.plant.sprite].op = oldop;
+				Graphics.elems[t.plant.sprite].rot = oldrot;
 			});
 		}
 		Object.values(Graphics.elems).filter((e) => {return e.zoom}).forEach((e) => {e.scale /= diff; e.slicescale = Plot.zoom / 32});

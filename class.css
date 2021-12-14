@@ -1,0 +1,6 @@
+.border {
+    border-style: solid;
+    border-width: 16px;
+    border-image: url('images/borderfull.png') 16 round;
+    box-sizing: border-box;
+}

@@ -29,6 +29,16 @@ function randRot() {
 	return snapValue(r, 90);
 }
 
+function randRotVertical() {
+	let r = Math.random() * 270;
+	return snapValue(r, 180);
+}
+
+function randRotHorizontal() {
+	let r = Math.random() * 270;
+	return snapValue(r, 180) + 90;
+}
+
 function getArea(x, y, w, h, a) {
 	if (w + x > a[0].length) w = a[0].length - x;
 	if (h + y > a.length) h = a.length - y;

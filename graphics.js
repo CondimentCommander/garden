@@ -343,7 +343,8 @@ var Graphics = {
 			'lime2': new Graphics.Resource(4, 'images/lime/2.png'),
 			'grass': new Graphics.Resource(5, 'images/grassbad.png'),
 			'sky_day': new Graphics.Resource(6, 'images/sky_day.png'),
-			'sky_night': new Graphics.Resource(7, 'images/sky_night.png')
+			'sky_night': new Graphics.Resource(7, 'images/sky_night.png'),
+			'soil': new Graphics.Resource(8, 'images/soil.png')
 		};
 		
 		for (let i = 0; i < 11; i++) {

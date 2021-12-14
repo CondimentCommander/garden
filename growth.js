@@ -13,6 +13,10 @@ Plot.tick = () => {
 	Graphics.prog = Plot.cycletime / Graphics.frameRate;
 	//Graphics.time = Plot.cycletime / 1000 + 1;
 	//console.log('tick!');
+	if (Game.heldTool == Game.tools[0] && Game.hovered[0] != undefined) {
+		Game.tcInspectUpdate(Game.currentTc);
+		Tooltip.ttUpdate(Tooltip.buildInspect(Plot.tiles[Game.hovered[1]][Game.hovered[0]]));
+	}
 };
 Plot.stop = () => {
 	clearInterval(Plot.cycle);
@@ -20,7 +24,7 @@ Plot.stop = () => {
 Plot.grow = (tile) => {
 	let plant = tile.plant;
 	plant.life++;
-	if (plant.plant.id == 1 && tile.soil == 0) {Plot.growWeed(tile); return}
+	if (plant.plant.id == 1 && tile.soil == Game.soils['rough']) {Plot.growWeed(tile); return}
 	if (plant.inh.growth.speed == 0) return;
 	let length = plant.inh.growth.stages.length - 1;
 	if (plant.stage == 0) {

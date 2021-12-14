@@ -11,7 +11,7 @@ Game.tools = [
 		clearChildren(Game.currentTc);
 	}, chhov: (tile, x, y) => {
 		//Graphics.elems[Game.heldTool.text].text = tile.plant.plant.dn + '\n' + tile.plant.grows + tile.plant.stage;
-		Game.heldTool.info = [tile.plant.plant.dn, tile.plant.inh.growth.stages[tile.plant.grows], tile.plant.grows, tile.plant.stage, tile.plant.plant.id, Game.inv.items[tile.plant.plant.name + '_seed']];
+		Game.heldTool.info = tile;
 		Game.tcInspectUpdate(Game.currentTc);
 		if (tile.plant.plant.id == 1) {
 			Tooltip.ttClose();
@@ -51,12 +51,11 @@ Game.tools = [
 		}, move: (x, y) => {
 
 		}, click: (tile, x, y) => {
-			let seed = Game.inv.items[Game.heldTool.plant.name + '_seed'];
+			let seed = Game.inv.items[Game.toolPlant.name + '_seed'];
 			if (tile.plant.plant.id != 1 || seed.amount <= 0) return;
-			Plot.plant(tile, Game.heldTool.plant);
+			Plot.plant(tile, Game.toolPlant);
 			seed.amount--;
 		}, init: () => {
-			Game.heldTool.plant = Game.plants[2];
 			//Game.heldTool.sprite = new Graphics.SpriteElement(0, 0, { img: Game.plants[2].growth.stages[0].img, s: Graphics.converta(16, ), opacity: 1, viewLayer: 6 }).add();
 			Game.heldTool.sprite = Graphics.fromData(Game.plants[2].growth.stages[0], 0, 0, true).add();
 			Graphics.elems[Game.heldTool.sprite].op = 0;
@@ -76,10 +75,16 @@ Game.tools = [
 				img.dataset.seed = a.id;
 				let div = document.createElement("DIV");
 				div.className = 'tcplantseed';
-				div.id = 'tcpseed_' + a.id;
+				div.id = 'tcpseed_' + a.plant.name;
+				div.onmouseenter = (event) => { Tooltip.tt(event, Tooltip.buildSeed(Game.inv.items[event.target.firstElementChild.dataset.seed]), 0, 0, '') };
+				div.onmousemove = (event) => { Tooltip.ttMove(event, 0, 0, '') };
+				div.onmouseleave = () => { Tooltip.ttClose() };
 				div.appendChild(img);
+				div.style.cursor = 'pointer';
 				el.appendChild(div);
 			});
+
+			Game.tcPlantChange(Game.toolPlant, true);
 		}
 	}),
 	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/sickle.cur', {click: (tile, x, y) => {
@@ -105,26 +110,35 @@ Game.changeTool = (t) => {
 };
 Game.toolsInit = () => {
 	Game.toolContext = document.getElementById('toolcontext');
+	Game.toolPlant = Game.plants[2];
 };
 Game.tcPlantClick = (event) => {
-	let plant = Game.inv.items[event.target.dataset.seed].plant.id;
-	Game.heldTool.plant = Game.plants[plant];
-	Graphics.elems[Game.heldTool.sprite].replace(Graphics.fromData(Game.plants[plant].growth.stages[0]));
+	Game.tcPlantChange(Game.inv.items[event.target.dataset.seed].plant);
+};
+Game.tcPlantChange = (to, first = false) => {
+	if (!first) {
+		let o = document.getElementById('tcpseed_' + Game.toolPlant.name);
+		o.style.backgroundColor = '#a0c94f';
+	}
+	let n = document.getElementById('tcpseed_' + to.name);
+	Game.toolPlant = to;
+	n.style.backgroundColor = '#1f7a15';
+	Graphics.elems[Game.heldTool.sprite].replace(Graphics.fromData(to.growth.stages[0]));
 	Graphics.elems[Game.heldTool.sprite].op = 0;
 	Graphics.elems[Game.heldTool.sprite].zoom = true;
-};
+}
 Game.tcInspectUpdate = (el) => {
 	clearChildren(el);
-	if (Game.heldTool.info == '' || Game.heldTool.info[4] == 1) return;
+	if (Game.heldTool.info == '' || Game.heldTool.info.plant.plant.id == 1) return;
 	let img = document.createElement("IMG");
-	img.src = Game.heldTool.info[5].icon;
+	img.src = Game.inv.items[Game.heldTool.info.plant.plant.name + '_seed'].icon;
 	img.width = 32;
 	img.height = 32;
 	img.style.display = 'inline-block';
 	img.style.imageRendering = 'pixelated';
-	let i = Game.heldTool.info[1];
+	//let i = Game.heldTool.info[1];
 	//let img = Interface.createImageSlice(i.img.src, i.sx, i.sy, i.sa, i.sa, 48, 48);
-	let text1 = document.createTextNode(Game.heldTool.info[0]);
+	let text1 = document.createTextNode('Time in stage: ' + Game.heldTool.info.plant.stagetime + ' ticks');
 	let div1 = document.createElement("DIV");
 	div1.style.display = 'inline-block';
 	div1.appendChild(text1);
