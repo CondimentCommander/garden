@@ -170,5 +170,5 @@ var Plot = {
 		if (!tile.plant.stage >= 1) return;
 		seed.amount++;
 		Plot.uproot(tile);
-	}
+	},
 };

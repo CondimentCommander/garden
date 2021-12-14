@@ -38,6 +38,7 @@ Game.inv = {
 		for (let i = 0; i < gen.length; i++) {
 			let elem = document.createElement("DIV");
 			elem.id = 'inb_' + gen[i].id;
+			elem.dataset.item = gen[i].id;
 			elem.className = 'inb';
 			let img = document.createElement("IMG");
 			img.width = 64;
@@ -49,9 +50,9 @@ Game.inv = {
 			amtd.appendChild(amt);
 			elem.appendChild(img);
 			elem.appendChild(amtd);
-			elem.onmouseenter = 'Tooltip.tt(event, Tooltip.buildItem(event, ' + gen[i] + ']), 0, 0, \'\')';
-			elem.onmousemove = 'Tooltip.ttMove(event, 0, 0, \'\'';
-			elem.onmouseleave = 'Tooltip.ttClose()';
+			elem.onmouseenter = (event) => {Tooltip.tt(event, Tooltip.buildItem(Game.inv.items[event.target.dataset.item]), 0, 0, '')};
+			elem.onmousemove = (event) => {Tooltip.ttMove(event, 0, 0, '')};
+			elem.onmouseleave = () => {Tooltip.ttClose()};
 			Game.inv.sect.appendChild(elem);
 		}
 	},

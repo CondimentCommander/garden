@@ -1,32 +1,35 @@
 Game.tools = [
 	new Game.Tool('Inspect', 'View plant information', 'images/glass.cur', {hov: (tile, x, y) => {
 		if (tile.plant.plant.id == 1) {
-			Graphics.elems[Game.heldTool.text].op = 0;
+			Tooltip.ttClose();
 		} else {
-			Graphics.elems[Game.heldTool.text].op = 1;
+			Tooltip.tooltip(Plot.farm, Tooltip.buildInspect(tile), x + 30, y + 25, false);
 		}
 	}, unhov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.text].op = 0;
+		Tooltip.ttClose();
 		Game.heldTool.info = '';
 		clearChildren(Game.currentTc);
 	}, chhov: (tile, x, y) => {
-		Graphics.elems[Game.heldTool.text].text = tile.plant.plant.dn + '\n' + tile.plant.grows + tile.plant.stage;
+		//Graphics.elems[Game.heldTool.text].text = tile.plant.plant.dn + '\n' + tile.plant.grows + tile.plant.stage;
 		Game.heldTool.info = [tile.plant.plant.dn, tile.plant.inh.growth.stages[tile.plant.grows], tile.plant.grows, tile.plant.stage, tile.plant.plant.id, Game.inv.items[tile.plant.plant.name + '_seed']];
 		Game.tcInspectUpdate(Game.currentTc);
 		if (tile.plant.plant.id == 1) {
-			Graphics.elems[Game.heldTool.text].op = 0;
+			Tooltip.ttClose();
 		} else {
-			Graphics.elems[Game.heldTool.text].op = 1;
+			if (Tooltip.focus == undefined) {
+				Tooltip.tooltip(Plot.farm, Tooltip.buildInspect(tile), x + 30, y + 25, false);
+			} else {
+				Tooltip.ttUpdate(Tooltip.buildInspect(tile));
+			}
 		}
 	}, move: (x, y) => {
-		if (Game.heldTool.text == undefined) return;
-		let con = Graphics.convert(x, y);
-		Graphics.elems[Game.heldTool.text].pos = {x: con[0], y: con[1]};
+		//let con = Graphics.convert(x, y);
+		Tooltip.tooltipMove(x + 30, y + 25);
 	}, init: () => {
-		Game.heldTool.text = new Graphics.TextElement(0, 0, { t: '', s: 15, f: 'Rubik', st: false, fill: 'white', viewLayer: 6 }).add();
+		//Game.heldTool.text = new Graphics.TextElement(0, 0, { t: '', s: 15, f: 'Rubik', st: false, fill: 'white', viewLayer: 6 }).add();
 		Game.heldTool.info = '';
 	}, swap: () => {
-		Graphics.elems[Game.heldTool.text].remove();
+
 	}, tc: (el) => {
 		Game.tcInspectUpdate(el);
 	}}),
@@ -61,7 +64,6 @@ Game.tools = [
 		}, swap: () => {
 			Graphics.elems[Game.heldTool.sprite].remove();
 		}, tc: (el) => {
-			console.log('d');
 			let owned = Game.inv.getOwned();
 			clearChildren(el);
 			let seeds = owned.filter((a) => { return a.cat.includes('seed') });
