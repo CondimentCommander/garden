@@ -3,10 +3,12 @@ var rh = 1.0;
 
 var Game = {
 	Plant: class {
-		constructor(name, id, displayName) {
+		constructor(name, id) {
 			this.name = name;
 			this.id = id;
-			this.dn = displayName;
+			this.dn = Lang.l.map.plant[name].name;
+			this.desc = Lang.l.map.plant[name].desc;
+			this.lore = Lang.l.map.plant[name].lore;
 			this.growth = {};
 			this.events = {pretick: () => {}, grow: () => {}, posttick: () => {}, harvest: (tile) => {Plot.harvest(tile)}};
 			this.inh = {};
@@ -41,9 +43,10 @@ var Game = {
 		}
 	},
 	Tool: class {
-		constructor(name, desc, icon, events) {
-			this.name = name;
-			this.desc = desc;
+		constructor(id, icon, events) {
+			this.id = id;
+			this.name = Lang.l.map.tool[id].name;
+			this.desc = Lang.l.map.tool[id].desc;
 			this.icon = icon;
 			this.events = events;
 			if (this.events.click == undefined) this.events.click = () => {};
@@ -57,42 +60,42 @@ var Game = {
 		}
 	},
 	init: () => {
-		Game.plants = [
-			new Game.Plant('test', 0, 'Test').setGrowth({ 
+		Game.plants = {
+			'test': new Game.Plant('test', 0).setGrowth({ 
 				speed: 2, matureTime: 5, decay: 1, stages: [
 					{ img: Graphics.resources['lime2'], sa: 2, opacity: 1, viewLayer: 3 }, 
 					{ img: Graphics.resources['lime'], s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }
 				] 
 			}).setinh(),
-			new Game.Plant('empty', 1, 'None').setGrowth({ 
+			'empty': new Game.Plant('empty', 1).setGrowth({ 
 				speed: 0, matureTime: 5, decay: 1, stages: [
 					{ img: Graphics.resources['grass'], sa: 2, opacity: 0, viewLayer: 3 }
 				]
 			}).addEvent('harvest', (tile) => { }).setinh(),
-			new Game.Plant('grass', 2, 'Grass').setGrowth({
+			'grass': new Game.Plant('grass', 2).setGrowth({
 				speed: 2, matureTime: 5, decay: 1, stages: [
 					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 48, slsa: 32 },
 					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 48, slsa: 32 }, 
 					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 48, sy: 48, slsa: 32 }
 				], mutations: {
-					'10': 3
+					'10': 'cornweed'
 				}
 			}).setinh(),
-			new Game.Plant('cornweed', 3, 'Cornweed').setGrowth({
+			'cornweed': new Game.Plant('cornweed', 3).setGrowth({
 				speed: 3, matureTime: 2, decay: 0.9, stages: [
 					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 0, sy: 0, slsa: 32 }, 
 					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 16, sy: 0, slsa: 32 }, 
 					{ img: Graphics.resources['sprites1'], sa: 2, opacity: 1, viewLayer: 3, sx: 32, sy: 0, slsa: 32 }
 				]
 			}).setinh()
-		];
-		Game.plants.forEach((p) => {Game.scalePlant(p)});
+		};
+		Object.values(Game.plants).forEach((p) => {Game.scalePlant(p)});
 		Game.soils = {
 			'rough': new Game.Soil('rough', 'Rough Soil', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 0, sls: Plot.zoom / 32, tag: 'tile' }),
 			'farmland': new Game.Soil('farmland', 'Farmland', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 16, sls: Plot.zoom / 32, tag: 'tile' })
 		};
 		Game.inv.init();
-		Plot.weeds = {'15': Game.plants[2], '1': Game.plants[3]};
+		Plot.weeds = {'15': Game.plants['grass'], '1': Game.plants['grass']};
 	},
 	dev: {
 		fertilizer: 4,
@@ -115,6 +118,7 @@ function start() {
 	Graphics.ctx = Graphics.canvas.getContext('2d');
 	Graphics.background = document.getElementById('bg');
 	Graphics.bg = Graphics.background.getContext('2d');
+	//Lang.init();
 	Graphics.initial();
 	Game.init();
 	Interface.init();
@@ -134,7 +138,7 @@ function start() {
 	Graphics.timeInterval = setInterval(Graphics.timer, 1000);
 
 	Game.toolsInit();
-	Game.heldTool = Game.tools[0];
+	Game.heldTool = Game.tools.inspect;
 	Plot.farm.style.cursor = 'url(' + Game.heldTool.icon + '),auto';
 	Game.heldTool.events.init();
 	document.getElementById('tool_' + Game.heldTool.name).style.width = '60px';

@@ -1,28 +1,34 @@
 Game.inv = {
 	balance: 0,
 	Item: class {
-		constructor(name, id, icon, categories, desc, lore) {
+		constructor(name, id, icon, categories) {
 			this.name = name;
 			this.id = id;
 			this.icon = icon;
 			this.cat = categories;
-			this.desc = desc;
-			this.lore = lore;
+			this.desc = Lang.l.map.inv.item[id].desc;
+			this.lore = Lang.l.map.inv.item[id].lore;
 			this.amount = 0;
+		}
+		changeAmount(amt) {
+			if (amt < 0) return false;
+			this.amount = lockValue(amt, 0, trillion);
+			return true;
 		}
 	},
 	defineItems: () => {
 		Game.inv.Seed = class extends Game.inv.Item {
-			constructor(name, id, icon, categories, lore, plant) {
-				super(name, id, icon, categories, 'A seed that can be planted in the plot', lore);
+			constructor(name, id, icon, categories, plant) {
+				super(name, id, icon, categories);
 				this.plant = plant;
 				this.cat.push('Seed');
+				this.desc = Lang.l.map.inv.seed_description;
 				Game.inv.seeds[this.id] = this;
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], 'The most common seed around. You almost have too much...', Game.plants[2]),
-			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], 'Try it popped!', Game.plants[3]),
+			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], Game.plants['grass']),
+			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], Game.plants['cornweed']),
 		}
 	},
 	getOwned: () => {
@@ -60,7 +66,7 @@ Game.inv = {
 		Game.inv.sect = document.getElementById('inv_items');
 		Game.inv.seeds = {};
 		Game.inv.defineItems();
-		Game.inv.items['grass_seed'].amount = 100;
-		Game.inv.items['cornweed_seed'].amount = 10;
+		Game.inv.items['grass_seed'].changeAmount(100);
+		Game.inv.items['cornweed_seed'].changeAmount(10);
 	}
 };

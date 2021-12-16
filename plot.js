@@ -16,7 +16,7 @@ var Plot = {
 				//cell.onmouseover = Game.hoverTile;
 				//cell.onmouseout = Game.hoverOffTile;
 				Plot.tiles[i].push(new Plot.Tile(j * ps * 2, i * ps * 2, Game.soils['rough']));
-				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants[1], Plot.tiles[i][j]);
+				Plot.tiles[i][j].plant = new Plot.PlantTile(Game.plants['empty'], Plot.tiles[i][j]);
 			}
 		}
 	},
@@ -46,7 +46,7 @@ var Plot = {
 	},
 	uproot: (tile) => {
 		if (Graphics.elems[tile.plant.sprite] == null) return;
-		Plot.plant(tile, Game.plants[1]);
+		Plot.plant(tile, Game.plants['empty']);
 	},
 	plant: (tile, plant) => {
 		Graphics.elems[tile.plant.sprite].remove();
@@ -71,7 +71,7 @@ var Plot = {
 				let pr = randRotHorizontal();
 				Plot.tiles[i][j].sprite = new Graphics.SpriteElement(j * ps + Plot.pos.x, i * ps + Plot.pos.y, Game.soils['rough'].img).add();
 				Graphics.elems[Plot.tiles[i][j].sprite].rot = r;
-				Graphics.elems[Plot.tiles[i][j].plant.sprite].rot = pr;
+				//Graphics.elems[Plot.tiles[i][j].plant.sprite].rot = pr;
 			}
 		}
 		Plot.edge = [];
@@ -115,7 +115,7 @@ var Plot = {
 			let y = tiles[i].parentElement.rowIndex;
 			tiles[i].style.padding = info.ts / 2 + 'px';
 		}
-		Game.plants.forEach((p) => {Game.scalePlant(p)});
+		Object.values(Game.plants).forEach((p) => {Game.scalePlant(p)});
 		for (let i = 0; i < Plot.height; i++) {
 			Plot.tiles[i].forEach((t) => {
 				let x = (t.x - Plot.pos.x) / 2 + Plot.pos.x;
@@ -159,7 +159,7 @@ var Plot = {
 		if (Plot.pos.x > 512 - Plot.width * info.ps) Plot.farm.style.borderRightColor = 'blue';
 		if (Plot.pos.y < 0) Plot.farm.style.borderTopColor = 'blue';
 		if (Plot.pos.y > 512 - Plot.height * info.ps) Plot.farm.style.borderBottomColor = 'blue';
-		if (Game.heldTool != undefined) Game.heldTool.events.move(Game.mousePos[0], Game.mousePos[1]);
+		if (Game.heldTool != undefined) Game.heldTool.events.move(Input.mousePos[0], Input.mousePos[1]);
 	},
 	renderUpdate: () => {
 		for (let i = 0; i < Plot.height; i++) {
@@ -169,10 +169,10 @@ var Plot = {
 		}
 	},
 	harvest: (tile) => {
-		if (tile.plant.plant.id == 1) return;
+		if (tile.plant.plant.name == 'empty') return;
 		let seed = Game.inv.items[tile.plant.plant.name + '_seed'];
 		if (!tile.plant.stage >= 1) return;
-		seed.amount++;
+		seed.changeAmount(seed.amount + 1);
 		Plot.uproot(tile);
 	},
 };

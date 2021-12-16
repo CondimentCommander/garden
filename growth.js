@@ -13,9 +13,9 @@ Plot.tick = () => {
 	Graphics.prog = Plot.cycletime / Graphics.frameRate;
 	//Graphics.time = Plot.cycletime / 1000 + 1;
 	//console.log('tick!');
-	if (Game.heldTool == Game.tools[0] && Game.hovered[0] != undefined) {
+	if (Game.heldTool.id == 'inspect' && Input.hovered[0] != undefined) {
 		Game.tcInspectUpdate(Game.currentTc);
-		Tooltip.ttUpdate(Tooltip.buildInspect(Plot.tiles[Game.hovered[1]][Game.hovered[0]]));
+		Tooltip.ttUpdate(Tooltip.buildInspect(Plot.tiles[Input.hovered[1]][Input.hovered[0]]));
 	}
 };
 Plot.stop = () => {
@@ -24,7 +24,7 @@ Plot.stop = () => {
 Plot.grow = (tile) => {
 	let plant = tile.plant;
 	plant.life++;
-	if (plant.plant.id == 1 && tile.soil == Game.soils['rough']) {Plot.growWeed(tile); return}
+	if (plant.plant.name == 'empty' && tile.soil == Game.soils['rough']) {Plot.growWeed(tile); return}
 	if (plant.inh.growth.speed == 0) return;
 	let length = plant.inh.growth.stages.length - 1;
 	if (plant.stage == 0) {
@@ -63,7 +63,7 @@ Plot.growWeed = (tile) => {
 	let plant = tile.plant;
 	if (chance(0.015 * Game.dev.fertilizer)) {
 		let weed = weightedChance(Plot.weeds);
-		if (plant.plant.id != 1) {
+		if (plant.plant.name != 'empty') {
 			if (weed.name != 'rankweed') return;
 		}
 		Plot.plant(tile, weed);
@@ -78,7 +78,7 @@ Plot.mutate = (tile) => {
 };
 Plot.crossBreed = (tile) => {
 	let si = Graphics.screenInfo();
-	let contenders = Plot.checkRadius(tile.plotx / si.ps, tile.ploty / si.ps, 1, (e) => {return e.plant.plant.id == 2}, true);
+	let contenders = Plot.checkRadius(tile.plotx / si.ps, tile.ploty / si.ps, 1, (e) => {return e.plant.plant.name == 'grass'}, true);
 	console.log(contenders);
 };
 Plot.decay = (tile) => {

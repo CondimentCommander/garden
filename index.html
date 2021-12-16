@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="ui.css">
 	<link rel="stylesheet" href="anims.css">
 	<link rel="stylesheet" href="class.css">
+	<script src="language.js"></script>
 	<script src="graphics.js"></script>
 	<script src="plot.js"></script>
 	<script src="index.js"></script>
@@ -18,7 +19,6 @@
 	<script src="panels.js"></script>
 	<script src="audio.js"></script>
 	<script src="tooltips.js"></script>
-	<script src="format.js"></script>
 	
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,7 +49,7 @@
 			<div class="setting"><p>Fertilizer</p></div>
 		</div>
 	</div>
-	<div class="section" id="farmview" onmousedown="Game.panStart(event)" onmouseup="Game.panStop(event)" onmousemove="Game.panMove(event)" onwheel="Game.zoom(event)" oncontextmenu="return false">
+	<div class="section" id="farmview" onmousedown="Input.panStart(event)" onmouseup="Input.panStop(event)" onmousemove="Input.panMove(event)" onwheel="Input.zoom(event)" oncontextmenu="return false">
 		<div id="plot">
 			<table id="plott">
 				
@@ -59,13 +59,13 @@
 		<canvas class="canvas" id="can" width="512" height="512"></canvas>
 		<div id="ticktimer" onmouseenter="Tooltip.tt(event, Tooltip.buildTime(), -8, -8, '')" onmousemove="Tooltip.ttMove(event, -8, -8, '')" onmouseleave="Tooltip.ttClose()"></div>
 		<div id="toolbar">
-			<div id="tool_Inspect" class="toolbar_button" onclick="Game.changeTool(0)" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools[0]), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
+			<div id="tool_Inspect" class="toolbar_button" onclick="Game.changeTool('inspect')" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools['inspect']), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
 				<img src="images/glass.png" width="48px" height="48px">
 			</div>
-			<div id="tool_Plant" class="toolbar_button" onclick="Game.changeTool(1)" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools[1]), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
+			<div id="tool_Plant" class="toolbar_button" onclick="Game.changeTool('plant')" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools['plant']), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
 				<img src="images/lime/2.png" width="48px" height="48px">
 			</div>
-			<div id="tool_Harvest" class="toolbar_button" onclick="Game.changeTool(2)" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools[2]), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
+			<div id="tool_Harvest" class="toolbar_button" onclick="Game.changeTool('harvest')" onmouseenter="Tooltip.tt(event, Tooltip.buildTool(event, Game.tools['harvest']), 8, 0, 'right')" onmousemove="Tooltip.ttMove(event, 8, 0, 'right')" onmouseleave="Tooltip.ttClose()">
 				<img src="images/sickle.png" width="48px" height="48px">
 			</div>
 		</div>
@@ -85,10 +85,10 @@
 		<div class="bar_button" onclick="Game.inv.genInv(); Interface.openFloat(Interface.inventory);"><img class="barimg" src="images/bag.png" width="64px" height="64px"> <p class="bar_button_text">Inventory</p></div>
 		<div class="bar_button" onclick="Interface.openFloat(Interface.settings);"><img class="barimg" src="images/gear.png" width="64px" height="64px"> <p class="bar_button_text">Settings</p></div>
 	</div>
-	<div class="section" id="seeds" onmouseup="Game.panStop(event)">
+	<div class="section" id="seeds" onmouseup="Input.panStop(event)">
 		
 	</div>
-	<div class="section" id="menu" onmouseup="Game.panStop(event)">
+	<div class="section" id="menu" onmouseup="Input.panStop(event)">
 	
 	</div>
 </body>

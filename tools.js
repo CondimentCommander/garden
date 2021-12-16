@@ -1,6 +1,6 @@
-Game.tools = [
-	new Game.Tool('Inspect', 'View plant information', 'images/glass.cur', {hov: (tile, x, y) => {
-		if (tile.plant.plant.id == 1) {
+Game.tools = {
+	inspect: new Game.Tool('inspect', 'images/glass.cur', {hov: (tile, x, y) => {
+		if (tile.plant.plant.name == 'empty') {
 			Tooltip.ttClose();
 		} else {
 			Tooltip.tooltip(Plot.farm, Tooltip.buildInspect(tile), x + 30, y + 25, false);
@@ -13,7 +13,7 @@ Game.tools = [
 		//Graphics.elems[Game.heldTool.text].text = tile.plant.plant.dn + '\n' + tile.plant.grows + tile.plant.stage;
 		Game.heldTool.info = tile;
 		Game.tcInspectUpdate(Game.currentTc);
-		if (tile.plant.plant.id == 1) {
+		if (tile.plant.plant.name == 'empty') {
 			Tooltip.ttClose();
 		} else {
 			if (Tooltip.focus == undefined) {
@@ -33,14 +33,14 @@ Game.tools = [
 	}, tc: (el) => {
 		Game.tcInspectUpdate(el);
 	}}),
-	new Game.Tool('Plant', 'Plant seeds on farmland', 'images/plant.cur', {
+	plant: new Game.Tool('plant', 'images/plant.cur', {
 		hov: (tile, x, y) => {
 			Graphics.elems[Game.heldTool.sprite].op = 0.5;
 		}, unhov: (tile, x, y) => {
 			Graphics.elems[Game.heldTool.sprite].op = 0;
 		}, chhov: (tile, x, y) => {
 			if (Game.heldTool.sprite == undefined) return;
-			if (tile.plant.plant.id != 1) {
+			if (tile.plant.plant.name != 'empty') {
 				Graphics.elems[Game.heldTool.sprite].op = 0;
 			} else {
 				Graphics.elems[Game.heldTool.sprite].op = 0.5;
@@ -52,12 +52,12 @@ Game.tools = [
 
 		}, click: (tile, x, y) => {
 			let seed = Game.inv.items[Game.toolPlant.name + '_seed'];
-			if (tile.plant.plant.id != 1 || seed.amount <= 0) return;
+			if (tile.plant.plant.name != 'empty' || seed.amount <= 0) return;
 			Plot.plant(tile, Game.toolPlant);
-			seed.amount--;
+			seed.changeAmount(seed.amount - 1);
 		}, init: () => {
-			//Game.heldTool.sprite = new Graphics.SpriteElement(0, 0, { img: Game.plants[2].growth.stages[0].img, s: Graphics.converta(16, ), opacity: 1, viewLayer: 6 }).add();
-			Game.heldTool.sprite = Graphics.fromData(Game.plants[2].growth.stages[0], 0, 0, true).add();
+			//Game.heldTool.sprite = new Graphics.SpriteElement(0, 0, { img: Game.plants['grass'].growth.stages[0].img, s: Graphics.converta(16, ), opacity: 1, viewLayer: 6 }).add();
+			Game.heldTool.sprite = Graphics.fromData(Game.plants['grass'].growth.stages[0], 0, 0, true).add();
 			Graphics.elems[Game.heldTool.sprite].op = 0;
 			Graphics.elems[Game.heldTool.sprite].zoom = true;
 		}, swap: () => {
@@ -87,10 +87,10 @@ Game.tools = [
 			Game.tcPlantChange(Game.toolPlant, true);
 		}
 	}),
-	new Game.Tool('Harvest', 'Obtain resources from plants', 'images/sickle.cur', {click: (tile, x, y) => {
+	harvest: new Game.Tool('harvest', 'images/sickle.cur', {click: (tile, x, y) => {
 		tile.plant.inh.events.harvest(tile);
 	}})
-];
+};
 
 Game.changeTool = (t) => {
 	if (Game.heldTool == Game.tools[t]) return;
@@ -110,7 +110,7 @@ Game.changeTool = (t) => {
 };
 Game.toolsInit = () => {
 	Game.toolContext = document.getElementById('toolcontext');
-	Game.toolPlant = Game.plants[2];
+	Game.toolPlant = Game.plants['grass'];
 };
 Game.tcPlantClick = (event) => {
 	Game.tcPlantChange(Game.inv.items[event.target.dataset.seed].plant);
@@ -129,7 +129,7 @@ Game.tcPlantChange = (to, first = false) => {
 }
 Game.tcInspectUpdate = (el) => {
 	clearChildren(el);
-	if (Game.heldTool.info == '' || Game.heldTool.info.plant.plant.id == 1) return;
+	if (Game.heldTool.info == '' || Game.heldTool.info.plant.plant.name == 'empty') return;
 	let img = document.createElement("IMG");
 	img.src = Game.inv.items[Game.heldTool.info.plant.plant.name + '_seed'].icon;
 	img.width = 32;

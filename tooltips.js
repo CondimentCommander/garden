@@ -66,7 +66,7 @@ var Tooltip = {
         let ddiv = document.createElement("DIV");
         ddiv.appendChild(document.createTextNode('Day: ' + Math.floor(Time.timeDay)));
         let hdiv = document.createElement("DIV");
-        hdiv.appendChild(document.createTextNode('Time: ' + Format.fTime(Time.dayPoint)));
+        hdiv.appendChild(document.createTextNode('Time: ' + Lang.fTime(Time.dayPoint)));
         e.appendChild(tdiv);
         e.appendChild(ddiv);
         e.appendChild(hdiv);
@@ -102,14 +102,25 @@ var Tooltip = {
     buildInspect: (tile) => {
         let e = document.createElement("DIV");
         let ndiv = document.createElement("DIV");
+        ndiv.style.fontSize = '14pt';
+        ndiv.style.color = 'Gold';
         ndiv.appendChild(document.createTextNode(tile.plant.plant.dn));
+        let ddiv = document.createElement("DIV");
+        ddiv.appendChild(document.createTextNode(tile.plant.plant.desc));
+        let ldiv = document.createElement("DIV");
+        ldiv.style.color = 'black';
+        ldiv.style.fontStyle = 'italic';
+        ldiv.style.fontSize = '11pt';
+        ldiv.appendChild(document.createTextNode(tile.plant.plant.lore));
         let sdiv = document.createElement("DIV");
         sdiv.style.color = 'DarkGreen';
-        sdiv.appendChild(document.createTextNode('Stage: ' + Format.fStage(tile.plant.stage)));
+        sdiv.appendChild(document.createTextNode('Stage: ' + Lang.fStage(tile.plant.stage)));
         let gdiv = document.createElement("DIV");
         gdiv.style.color = 'LightGreen';
         gdiv.appendChild(document.createTextNode('Growth: ' + tile.plant.grows + '/' + (tile.plant.inh.growth.stages.length - 1)));
         e.appendChild(ndiv);
+        e.appendChild(ddiv);
+        e.appendChild(ldiv);
         e.appendChild(sdiv);
         e.appendChild(gdiv);
         return e;

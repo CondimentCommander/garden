@@ -1,3 +1,7 @@
+const million = 1000000;
+const billion = 1000000000;
+const trillion = 1000000000000;
+
 function lockValue(v, min, max) {
 	if (v < min) return min;
 	if (v > max) return max;
@@ -78,4 +82,9 @@ function weightedChance(weights) {
 		if (rand <= k[choice]) out = v[choice];
 	}
 	return out;
+}
+function textDiv(text) {
+	let div = document.createElement("DIV");
+	div.appendChild(document.createTextNode(text));
+	return div;
 }
