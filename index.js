@@ -35,9 +35,9 @@ var Game = {
 		}
 	},
 	Soil: class {
-		constructor(name, dn, img, events) {
+		constructor(name, img, events) {
 			this.name = name;
-			this.dn = dn;
+			this.dn = Lang.l.map.soil[name];
 			this.img = img;
 			this.events = events;
 		}
@@ -91,11 +91,11 @@ var Game = {
 		};
 		Object.values(Game.plants).forEach((p) => {Game.scalePlant(p)});
 		Game.soils = {
-			'rough': new Game.Soil('rough', 'Rough Soil', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 0, sls: Plot.zoom / 32, tag: 'tile' }),
-			'farmland': new Game.Soil('farmland', 'Farmland', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 16, sls: Plot.zoom / 32, tag: 'tile' })
+			'rough': new Game.Soil('rough', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 0, sls: Plot.zoom / 32, tag: 'tile' }),
+			'farmland': new Game.Soil('farmland', { img: Graphics.resources['soil'], s: Plot.zoom / 2, opacity: 1, viewLayer: 2, sx: 0, sy: 16, sls: Plot.zoom / 32, tag: 'tile' })
 		};
 		Game.inv.init();
-		Plot.weeds = {'15': Game.plants['grass'], '1': Game.plants['grass']};
+		Plot.weeds = {'15': Game.plants['grass'], '2': Game.plants['cornweed'], '1': Game.plants['test']};
 	},
 	dev: {
 		fertilizer: 4,
@@ -131,6 +131,8 @@ function start() {
 	Plot.move();
 	Graphics.setPos(Plot.tb, Plot.pos.x / si.ps * si.ts + document.getElementById('farmview').getBoundingClientRect().left + 8, Plot.pos.y / si.ps * si.ts + 8);
 	
+	Game.toolsInit();
+	Game.heldTool = Game.tools.inspect;
 
 	Graphics.timerEl = document.getElementById('ticktimer');
 	Time.init();

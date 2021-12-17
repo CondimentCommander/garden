@@ -68,6 +68,14 @@ var Lang = {
                         name: 'Harvest',
                         desc: 'Obtain resources from plants'
                     }
+                },
+                soil: {
+                    rough: {
+                        name: 'Rough Soil'
+                    },
+                    farmland: {
+                        name: 'Farmland'
+                    }
                 }
             }
         }

@@ -60,11 +60,14 @@
 	left: 0px;
 }
 #toolcontext {
-	position: relative;
+	position: absolute;
 	width: 60%;
-	left: 25%;
+	left: 15%;
 	z-index: 7;
-	top: 1%;
+	bottom: 1%;
+}
+#tcwrapper {
+	
 }
 .tc {
 	display: none;
@@ -78,6 +81,8 @@
 	border-style: solid;
 	image-rendering: pixelated;
 	display: inline-block;
+	position: absolute;
+	bottom: 2%;
 }
 #tc_Inspect {
 	height: 25px;

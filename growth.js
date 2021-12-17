@@ -7,8 +7,8 @@ Plot.execute = (func) => {
 	}
 };
 Plot.tick = () => {
-	Plot.execute((tile, i, j) => {if (tile.plant != undefined) tile.plant.inh.events.pretick()});
-	Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.grow(tile)});
+	Plot.execute((tile, i, j) => { if (tile.plant != undefined) tile.plant.inh.events.pretick() });
+	Plot.execute((tile, i, j) => { if (tile.plant != undefined) Plot.grow(tile) });
 	//Plot.execute((tile, i, j) => {if (tile.plant != undefined) Plot.growWeed(tile)});
 	Graphics.prog = Plot.cycletime / Graphics.frameRate;
 	//Graphics.time = Plot.cycletime / 1000 + 1;
@@ -24,7 +24,7 @@ Plot.stop = () => {
 Plot.grow = (tile) => {
 	let plant = tile.plant;
 	plant.life++;
-	if (plant.plant.name == 'empty' && tile.soil == Game.soils['rough']) {Plot.growWeed(tile); return}
+	if (plant.plant.name == 'empty' && tile.soil == Game.soils['rough']) { Plot.growWeed(tile); return }
 	if (plant.inh.growth.speed == 0) return;
 	let length = plant.inh.growth.stages.length - 1;
 	if (plant.stage == 0) {
@@ -78,7 +78,7 @@ Plot.mutate = (tile) => {
 };
 Plot.crossBreed = (tile) => {
 	let si = Graphics.screenInfo();
-	let contenders = Plot.checkRadius(tile.plotx / si.ps, tile.ploty / si.ps, 1, (e) => {return e.plant.plant.name == 'grass'}, true);
+	let contenders = Plot.checkRadius(tile.plotx / si.ps, tile.ploty / si.ps, 1, (e) => { return e.plant.plant.name == 'grass' }, true);
 	console.log(contenders);
 };
 Plot.decay = (tile) => {
@@ -92,9 +92,11 @@ Plot.checkRadius = (x, y, size, check, exclude) => {
 	let si = Graphics.screenInfo();
 	let ar = Plot.getArea(x - size, y - size, size * 2 + 1, size * 2 + 1);
 	let out = [];
-	ar.forEach((e) => {out.push(e.filter((el) => {
-		if (exclude && el == Plot.tiles[y][x]) return false;
-		return check(el);
-	}))});
+	ar.forEach((e) => {
+		out.push(e.filter((el) => {
+			if (exclude && el == Plot.tiles[y][x]) return false;
+			return check(el);
+		}))
+	});
 	return out;
 };
