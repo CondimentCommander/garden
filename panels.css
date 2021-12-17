@@ -1,13 +1,11 @@
 .panel {
-	background-color: #a0c94f;
 	box-sizing: border-box;
 	margin: 0px;
 	cursor: initial;
 }
 .float_panel {
-	background-color: #a0c94f;
 	border-style: solid;
-	border-color: black;
+	border-color: #a0c94f;
 	border-radius: 16px;
 	display: none;
 	z-index: 11;
@@ -64,10 +62,10 @@
 	width: 60%;
 	left: 15%;
 	z-index: 7;
-	bottom: 1%;
+	top: 1%;
 }
 #tcwrapper {
-	
+
 }
 .tc {
 	display: none;
@@ -81,8 +79,7 @@
 	border-style: solid;
 	image-rendering: pixelated;
 	display: inline-block;
-	position: absolute;
-	bottom: 2%;
+	background-color: darkslategray;
 }
 #tc_Inspect {
 	height: 25px;

@@ -27,7 +27,7 @@ Game.inv = {
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/lime/2.png', ['seed'], Game.plants['grass']),
+			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/grass_seed.png', ['seed'], Game.plants['grass']),
 			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], Game.plants['cornweed']),
 		}
 	},

@@ -24,7 +24,7 @@ Game.tools = {
 		}
 	}, move: (x, y) => {
 		//let con = Graphics.convert(x, y);
-		Tooltip.tooltipMove(x + 30, y + 25);
+		if (Input.hovered[0] != undefined) Tooltip.tooltipMove(x + 30, y + 25);
 	}, init: () => {
 		//Game.heldTool.text = new Graphics.TextElement(0, 0, { t: '', s: 15, f: 'Rubik', st: false, fill: 'white', viewLayer: 6 }).add();
 		Game.heldTool.info = '';
@@ -118,7 +118,7 @@ Game.tcPlantClick = (event) => {
 Game.tcPlantChange = (to, first = false) => {
 	if (!first) {
 		let o = document.getElementById('tcpseed_' + Game.toolPlant.name);
-		o.style.backgroundColor = '#a0c94f';
+		o.style.backgroundColor = 'darkslategray';
 	}
 	let n = document.getElementById('tcpseed_' + to.name);
 	Game.toolPlant = to;

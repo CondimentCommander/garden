@@ -4,3 +4,11 @@
     border-image: url('images/borderfull.png') 16 round;
     box-sizing: border-box;
 }
+.background {
+    background-image: url('images/background.png');
+    background-size: 32px;
+}
+.back, .panel, .bar_button, .toolbar_button {
+    background-image: url('images/barn.png');
+    background-size: 64px;
+}

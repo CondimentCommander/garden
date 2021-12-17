@@ -34,11 +34,10 @@
 	border-left-style: none;
 	border-top-left-radius: 0px;
 	border-bottom-left-radius: 0px;
-	background-color: #a0c94f;
 	image-rendering: pixelated;
 	width: 48px;
 	cursor: pointer;
-	border-color: #704426;
+	border-color: #a0c94f;
 }
 .toolbar_button > img {
 	pointer-events: none;
