@@ -51,6 +51,10 @@ var Lang = {
                         cornweed_seed: {
                             name: 'Dusty Kernels',
                             lore: 'Try it popped!'
+                        },
+                        test_seed: {
+                            name: 'Debug Pellets',
+                            lore: 'Why'
                         }
                     },
                     seed_description: 'A seed that can be planted in the plot'

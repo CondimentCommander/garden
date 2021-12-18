@@ -1,14 +1,14 @@
 Game.inv = {
 	balance: 0,
 	Item: class {
-		constructor(name, id, icon, categories) {
-			this.name = name;
+		constructor(id, icon, categories) {
 			this.id = id;
 			this.icon = icon;
 			this.cat = categories;
+			this.amount = 0;
+			this.name = Lang.l.map.inv.item[id].name;
 			this.desc = Lang.l.map.inv.item[id].desc;
 			this.lore = Lang.l.map.inv.item[id].lore;
-			this.amount = 0;
 		}
 		changeAmount(amt) {
 			if (amt < 0) return false;
@@ -18,8 +18,8 @@ Game.inv = {
 	},
 	defineItems: () => {
 		Game.inv.Seed = class extends Game.inv.Item {
-			constructor(name, id, icon, categories, plant) {
-				super(name, id, icon, categories);
+			constructor(id, icon, categories, plant) {
+				super(id, icon, categories);
 				this.plant = plant;
 				this.cat.push('Seed');
 				this.desc = Lang.l.map.inv.seed_description;
@@ -27,8 +27,9 @@ Game.inv = {
 			}
 		};
 		Game.inv.items = {
-			'grass_seed': new Game.inv.Seed('Grass Seed', 'grass_seed', 'images/grass_seed.png', ['seed'], Game.plants['grass']),
-			'cornweed_seed': new Game.inv.Seed('Dusty Kernels', 'cornweed_seed', 'images/kernels.png', ['seed'], Game.plants['cornweed']),
+			'grass_seed': new Game.inv.Seed('grass_seed', 'images/grass_seed.png', ['seed'], Game.plants['grass']),
+			'cornweed_seed': new Game.inv.Seed('cornweed_seed', 'images/kernels.png', ['seed'], Game.plants['cornweed']),
+			'test_seed': new Game.inv.Seed('test_seed', 'images/cake.png', ['seed'], Game.plants['test'])
 		}
 	},
 	getOwned: () => {
