@@ -48,11 +48,16 @@ var Tooltip = {
         i.style.display = 'inline-block';
         i.width = 32;
         i.height = 32;
+        i.style.backgroundColor = 'black';
+        i.style.borderStyle = 'solid';
+        i.style.borderWidth = '0px';
+        i.style.borderRadius = '10px';
         let tdiv = document.createElement("DIV");
         tdiv.style.display = 'inline-block';
+        tdiv.style.marginLeft = '8px';
         tdiv.appendChild(document.createTextNode(tool.name));
         let ddiv = document.createElement("DIV");
-        ddiv.style.color = 'black';
+        ddiv.style.color = 'white';
         ddiv.appendChild(document.createTextNode(tool.desc));
         e.appendChild(i);
         e.appendChild(tdiv);
@@ -108,7 +113,7 @@ var Tooltip = {
         let ddiv = document.createElement("DIV");
         ddiv.appendChild(document.createTextNode(tile.plant.plant.desc));
         let ldiv = document.createElement("DIV");
-        ldiv.style.color = 'black';
+        ldiv.style.color = 'white';
         ldiv.style.fontStyle = 'italic';
         ldiv.style.fontSize = '11pt';
         ldiv.appendChild(document.createTextNode(tile.plant.plant.lore));

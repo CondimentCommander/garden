@@ -64,7 +64,7 @@ var Game = {
 			'test': new Game.Plant('test', 0).setGrowth({ 
 				speed: 2, matureTime: 5, decay: 1, stages: [
 					{ img: Graphics.resources['lime2'], sa: 2, opacity: 1, viewLayer: 3 }, 
-					{ img: Graphics.resources['lime'], s: Plot.zoom / 2, opacity: 1, viewLayer: 3 }
+					{ img: Graphics.resources['lime'], sa: 2, opacity: 1, viewLayer: 3 }
 				] 
 			}).setinh(),
 			'empty': new Game.Plant('empty', 1).setGrowth({ 

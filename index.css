@@ -180,6 +180,7 @@
 	box-sizing: border-box;
 	cursor: pointer;
 	border-color: #704426;
+	color: white;
 }
 .bar_button:hover {
 	background-color: #1f7a15;
