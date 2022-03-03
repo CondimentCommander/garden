@@ -1,9 +1,9 @@
 var Format = {
-    fStage: (stage) => {
+    formatStage: (stage) => {
         let map = ['Growing', 'Mature', 'Decaying'];
         return map[stage]
     },
-    fTime: (time) => {
+    formatTime: (time) => {
         let f = time / Time.dayInterval * 24;
         let hours = Math.floor(f);
         let minutes = Math.floor((f - hours) * 60);

@@ -1,9 +1,9 @@
 var Lang = {
-    fStage: (stage) => {
+    formatStage: (stage) => {
         let map = [Lang.l.map.format.stage[0], Lang.l.map.format.stage[1], Lang.l.map.format.stage[2]];
         return map[stage]
     },
-    fTime: (time) => {
+    formatTime: (time) => {
         let f = time / Time.dayInterval * 24;
         let hours = Math.floor(f);
         let minutes = Math.floor((f - hours) * 60);
